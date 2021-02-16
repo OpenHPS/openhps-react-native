@@ -1,11 +1,5 @@
-import {
-    DataFrame, 
-    SourceNode, 
-    RFTransmitterObject,
-    RelativeRSSIPosition,
-    SensorSourceOptions
-} from '@openhps/core';
-import { WifiEntry, loadWifiList, reScanAndLoadWifiList } from "react-native-wifi-reborn";
+import { DataFrame, SourceNode, RFTransmitterObject, RelativeRSSIPosition, SensorSourceOptions } from '@openhps/core';
+import { WifiEntry, loadWifiList, reScanAndLoadWifiList } from 'react-native-wifi-reborn';
 
 /**
  * WLAN source node using react-native-wifi-reborn.
@@ -28,11 +22,13 @@ export class WLANSourceNode extends SourceNode<DataFrame> {
             // Scan interval
             this._timer = setInterval(() => {
                 // Load wifi list
-                reScanAndLoadWifiList().then((wifiList: Array<WifiEntry>) => {
-                    this.push(this.parseList(wifiList));
-                }).catch((ex: Error) => {
-                    this.logger('error', ex.message);
-                });
+                reScanAndLoadWifiList()
+                    .then((wifiList: Array<WifiEntry>) => {
+                        this.push(this.parseList(wifiList));
+                    })
+                    .catch((ex: Error) => {
+                        this.logger('error', ex.message);
+                    });
             }, this.options.interval);
             resolve();
         });
@@ -47,23 +43,24 @@ export class WLANSourceNode extends SourceNode<DataFrame> {
 
     public parseList(wifiList: Array<WifiEntry>): DataFrame {
         const frame = new DataFrame();
-        wifiList.forEach(value => {
+        wifiList.forEach((value) => {
             const ap = new RFTransmitterObject(value.BSSID);
             ap.displayName = value.SSID;
             frame.addObject(ap);
             frame.source = this.source;
             frame.source.removeRelativePositions(ap.uid);
-            frame.source.addRelativePosition(new RelativeRSSIPosition(ap, value.level))
+            frame.source.addRelativePosition(new RelativeRSSIPosition(ap, value.level));
         });
         return frame;
     }
 
     public onPull(): Promise<DataFrame> {
         return new Promise<DataFrame>((resolve, reject) => {
-            loadWifiList().then((wifiList: Array<WifiEntry>) => {
-                resolve(this.parseList(wifiList));
-            }).catch(reject);
+            loadWifiList()
+                .then((wifiList: Array<WifiEntry>) => {
+                    resolve(this.parseList(wifiList));
+                })
+                .catch(reject);
         });
     }
-
 }

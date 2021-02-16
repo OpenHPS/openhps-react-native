@@ -6,12 +6,6 @@
     <a href="https://ci.mvdw-software.com/job/openhps-react-native/" target="_blank">
         <img alt="Build Status" src="https://ci.mvdw-software.com/job/openhps-react-native/job/dev/badge/icon">
     </a>
-    <a href="https://ci.mvdw-software.com/view/OpenHPS/job/openhps-react-native/job/dev/lastCompletedBuild/testReport" target="_blank">
-        <img alt="Tests" src="https://img.shields.io/jenkins/tests?compact_message&jobUrl=https%3A%2F%2Fci.mvdw-software.com%2Fview%2FOpenHPS%2Fjob%2Fopenhps-react-native%2Fjob%2Fdev">
-    </a>
-    <a href="https://ci.mvdw-software.com/view/OpenHPS/job/openhps-react-native/job/dev/lastCompletedBuild/cobertura/" target="_blank">
-        <img alt="Code coverage" src="https://img.shields.io/jenkins/coverage/cobertura?jobUrl=https%3A%2F%2Fci.mvdw-software.com%2Fview%2FOpenHPS%2Fjob%2Fopenhps-react-native%2Fjob%2Fdev%2F">
-    </a>
     <a href="https://codeclimate.com/github/OpenHPS/openhps-react-native/" target="_blank">
         <img alt="Maintainability" src="https://img.shields.io/codeclimate/maintainability/OpenHPS/openhps-react-native">
     </a>

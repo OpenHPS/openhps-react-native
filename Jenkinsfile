@@ -22,12 +22,6 @@ pipeline {
                 sh 'npm run build:typedoc'
             }
         }
-        stage('Test') {
-            steps {
-                echo 'Testing ...'
-                sh 'npm run test:jenkins'
-            }
-        }
         stage('Publish') {
             parallel {
                 stage('Publish Development') {
@@ -60,8 +54,6 @@ pipeline {
     }
     post {
         always {
-            junit 'artifacts/test/xunit.xml'
-            cobertura coberturaReportFile: 'artifacts/coverage/cobertura-coverage.xml'
             publishHTML (target: [
                 allowMissing: false,
                 alwaysLinkToLastBuild: true,

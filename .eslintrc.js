@@ -20,6 +20,8 @@ module.exports = {
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "import/no-cycle": "error",
         "import/no-unresolved": "off",
+        "import/named": "off",
+        "import/namespace": "off",
         "prettier/prettier": ["error"],
         "jsdoc/check-tag-names": ["error", { "definedTags": ["category"] }],
     },

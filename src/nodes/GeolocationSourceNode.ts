@@ -1,6 +1,4 @@
-import {
-    DataFrame, SourceNode, GeographicalPosition, LengthUnit, SensorSourceOptions
-} from '@openhps/core';
+import { DataFrame, SourceNode, GeographicalPosition, LengthUnit, SensorSourceOptions } from '@openhps/core';
 import * as Geolocation from 'react-native-geolocation-service';
 
 /**
@@ -35,7 +33,7 @@ export class GeolocationSourceNode extends SourceNode<DataFrame> {
                 (error) => {
                     reject(error);
                 },
-                { enableHighAccuracy: true, timeout: 15000, maximumAge: this.options.interval }
+                { enableHighAccuracy: true, timeout: 15000, maximumAge: this.options.interval },
             );
             resolve();
         });
@@ -50,8 +48,7 @@ export class GeolocationSourceNode extends SourceNode<DataFrame> {
 
     public onPull(): Promise<DataFrame> {
         return new Promise<DataFrame>((resolve) => {
-           resolve(undefined);
+            resolve(undefined);
         });
     }
-
 }
