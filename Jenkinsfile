@@ -8,7 +8,6 @@ pipeline {
                 sh 'npm run clean'
                 sh 'npm run build:cjs'
                 sh 'npm run build:esm'
-                sh 'npm run build:webpack'
             }
         }
         stage('Quality') {
@@ -71,10 +70,6 @@ pipeline {
                 reportFiles: '*.*',
                 reportName: "Documentation"
             ])
-            archiveArtifacts artifacts: 'dist/web/openhps-react-native.js', fingerprint: true
-            archiveArtifacts artifacts: 'dist/web/openhps-react-native.js.map', fingerprint: true
-            archiveArtifacts artifacts: 'dist/web/openhps-react-native.min.js', fingerprint: true
-            archiveArtifacts artifacts: 'dist/web/openhps-react-native.min.js.map', fingerprint: true
             deleteDir()
         }
     }
