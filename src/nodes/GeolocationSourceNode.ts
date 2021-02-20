@@ -39,7 +39,7 @@ export class GeolocationSourceNode extends SourceNode<DataFrame> {
         });
     }
 
-    public stopScan(): Promise<void> {
+    public stop(): Promise<void> {
         return new Promise<void>((resolve) => {
             clearInterval(this._timer);
             resolve();

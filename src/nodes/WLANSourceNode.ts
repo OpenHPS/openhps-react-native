@@ -51,13 +51,13 @@ export class WLANSourceNode extends SourceNode<DataFrame> {
             }).catch((ex: Error) => {
                 this.logger('error', ex);
             }).finally(() => {
-                this._timer = setTimeout(this._scan.bind(this));
+                this._timer = setTimeout(this._scan.bind(this), this.options.interval);
             });
     }
 
     public stop(): Promise<void> {
         return new Promise<void>((resolve) => {
-            clearInterval(this._timer);
+            clearTimeout(this._timer);
             this._timer = undefined;
             resolve();
         });
@@ -65,12 +65,14 @@ export class WLANSourceNode extends SourceNode<DataFrame> {
 
     public parseList(wifiList: Array<WifiManager.WifiEntry>): DataFrame {
         const frame = new DataFrame();
+        frame.source = this.source;
+        frame.source.relativePositions
+            .forEach(pos => 
+                frame.source.removeRelativePositions(pos.referenceObjectUID));
         wifiList.forEach((value) => {
             const ap = new RFTransmitterObject(value.BSSID);
             ap.displayName = value.SSID;
             frame.addObject(ap);
-            frame.source = this.source;
-            frame.source.removeRelativePositions(ap.uid);
             frame.source.addRelativePosition(new RelativeRSSIPosition(ap, value.level));
         });
         return frame;

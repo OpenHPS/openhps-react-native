@@ -5,12 +5,20 @@ import {
     Acceleration,
     Orientation,
     AngularVelocity,
-    RelativeValue,
-    Euler,
+    Quaternion,
+    Magnetism
 } from '@openhps/core';
-import { accelerometer, gyroscope, setUpdateIntervalForType, SensorTypes, magnetometer } from 'react-native-sensors';
+import { 
+    accelerometer, 
+    gyroscope, 
+    setUpdateIntervalForType, 
+    SensorTypes, 
+    magnetometer, 
+    SensorData,
+    orientation,
+    OrientationData
+} from 'react-native-sensors';
 import { Subscription } from 'rxjs';
-import { Platform } from 'react-native';
 
 /**
  * IMU source node using react-native-sensors.
@@ -20,10 +28,12 @@ export class IMUSourceNode extends SourceNode<IMUDataFrame> {
     private _subscriptionAcc: Subscription;
     private _subscriptionGyro: Subscription;
     private _subscriptionMag: Subscription;
+    private _subscriptionRot: Subscription;
     private _lastPush = 0;
-    private _rotation: any;
-    private _rotationRate: any;
-    private _acceleration: any;
+    private _rotation: OrientationData;
+    private _magnetometer: SensorData;
+    private _rotationRate: SensorData;
+    private _acceleration: SensorData;
 
     constructor(options?: SensorSourceOptions) {
         super(options);
@@ -39,14 +49,29 @@ export class IMUSourceNode extends SourceNode<IMUDataFrame> {
             setUpdateIntervalForType(SensorTypes.accelerometer, this.options.interval);
             setUpdateIntervalForType(SensorTypes.gyroscope, this.options.interval);
             setUpdateIntervalForType(SensorTypes.magnetometer, this.options.interval);
-            this._subscriptionMag = magnetometer.subscribe((rotation) => {
+            setUpdateIntervalForType(SensorTypes.orientation, this.options.interval);
+
+            this._subscriptionRot = orientation.subscribe((rotation) => {
                 this._rotation = rotation;
                 if (
                     this._lastPush < rotation.timestamp &&
                     this._acceleration !== undefined &&
-                    this._rotationRate !== undefined
+                    this._rotationRate !== undefined &&
+                    this._magnetometer !== undefined
                 ) {
                     this._lastPush = rotation.timestamp;
+                    this.createFrame();
+                }
+            });
+            this._subscriptionMag = magnetometer.subscribe((magnetometer) => {
+                this._magnetometer = magnetometer;
+                if (
+                    this._lastPush < magnetometer.timestamp &&
+                    this._acceleration !== undefined &&
+                    this._rotationRate !== undefined &&
+                    this._rotationRate !== undefined
+                ) {
+                    this._lastPush = magnetometer.timestamp;
                     this.createFrame();
                 }
             });
@@ -55,7 +80,8 @@ export class IMUSourceNode extends SourceNode<IMUDataFrame> {
                 if (
                     this._lastPush < rotationRate.timestamp &&
                     this._acceleration !== undefined &&
-                    this._rotation !== undefined
+                    this._magnetometer !== undefined &&
+                    this._rotationRate !== undefined
                 ) {
                     this._lastPush = rotationRate.timestamp;
                     this.createFrame();
@@ -65,7 +91,8 @@ export class IMUSourceNode extends SourceNode<IMUDataFrame> {
                 this._acceleration = acceleration;
                 if (
                     this._lastPush < acceleration.timestamp &&
-                    this._rotation !== undefined &&
+                    this._magnetometer !== undefined &&
+                    this._rotationRate !== undefined &&
                     this._rotationRate !== undefined
                 ) {
                     this._lastPush = acceleration.timestamp;
@@ -81,6 +108,7 @@ export class IMUSourceNode extends SourceNode<IMUDataFrame> {
             this._subscriptionAcc.unsubscribe();
             this._subscriptionGyro.unsubscribe();
             this._subscriptionMag.unsubscribe();
+            this._subscriptionRot.unsubscribe();
             resolve();
         });
     }
@@ -89,35 +117,30 @@ export class IMUSourceNode extends SourceNode<IMUDataFrame> {
         return new Promise<void>((resolve) => {
             const dataFrame = new IMUDataFrame();
 
-            if (Platform.OS === 'android') {
-                dataFrame.acceleration = new Acceleration(
-                    this._acceleration.x / 9.81,
-                    this._acceleration.y / 9.81,
-                    this._acceleration.z / 9.81,
-                );
-            } else {
-                dataFrame.acceleration = new Acceleration(
-                    this._acceleration.x,
-                    this._acceleration.y,
-                    this._acceleration.z,
-                );
-            }
-
-            dataFrame.absoluteOrientation = Orientation.fromEuler(
-                new Euler(this._rotation.x, this._rotation.y, this._rotation.z),
+            dataFrame.acceleration = new Acceleration(
+                this._acceleration.x,
+                this._acceleration.y,
+                this._acceleration.z,
             );
+            dataFrame.absoluteOrientation = Orientation.fromQuaternion(new Quaternion(
+                this._rotation.qx,
+                this._rotation.qy,
+                this._rotation.qz,
+                this._rotation.qw
+            ));
             dataFrame.angularVelocity = new AngularVelocity(
                 this._rotationRate.x,
                 this._rotationRate.y,
                 this._rotationRate.z,
             );
+            dataFrame.magnetism = new Magnetism(
+                this._magnetometer.x,
+                this._magnetometer.y,
+                this._magnetometer.z
+            );
 
             dataFrame.frequency = 1 / this.options.interval;
             dataFrame.source = this.source;
-
-            dataFrame.source.addRelativePosition(new RelativeValue('MAG_X', this._rotation.x));
-            dataFrame.source.addRelativePosition(new RelativeValue('MAG_Y', this._rotation.y));
-            dataFrame.source.addRelativePosition(new RelativeValue('MAG_Z', this._rotation.z));
 
             this.push(dataFrame);
             resolve();

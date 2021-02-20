@@ -50,7 +50,7 @@
     "react-native": "^0.63.4",
     "react-native-ble-plx": "^2.0.2",
     "react-native-geolocation-service": "^5.2.0",
-    "react-native-sensors": "^7.0.2",
+    "react-native-sensors": "^7.1.0",
     "react-native-wifi-reborn": "^4.3.7"
   },
   "devDependencies": {
@@ -78,7 +78,7 @@
     "react-native": "^0.63.4",
     "react-native-ble-plx": "^2.0.2",
     "react-native-geolocation-service": "^5.2.0",
-    "react-native-sensors": "^7.0.2",
+    "react-native-sensors": "^7.1.0",
     "react-native-wifi-reborn": "^4.3.7",
     "reflect-metadata": ">=0.1.13",
     "shx": "^0.3.3",
