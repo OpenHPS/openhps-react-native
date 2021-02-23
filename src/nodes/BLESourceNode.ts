@@ -34,14 +34,15 @@ export class BLESourceNode extends SourceNode<DataFrame> {
     }
 
     public start(): Promise<void> {
-        return new Promise((resolve, reject) => {
-            this._timer = setTimeout(this._scan.bind(this), this.options.interval);
+        return new Promise((resolve) => {
+            this._timer = setInterval(this._scan.bind(this), this.options.interval);
+            resolve();
         });
     }
 
     public stop(): Promise<void> {
         return new Promise<void>((resolve) => {
-            clearTimeout(this._timer);
+            clearInterval(this._timer);
             this._timer = undefined;
             this._manager.stopDeviceScan();
             resolve();
@@ -49,10 +50,6 @@ export class BLESourceNode extends SourceNode<DataFrame> {
     }
 
     private _scan(): void {
-        if (!this._timer) {
-            return;
-        }
-
         this._manager.stopDeviceScan();
         this.source.relativePositions.forEach((relativePosition) => {
             this.source.removeRelativePositions(relativePosition.referenceObjectUID);
@@ -65,20 +62,20 @@ export class BLESourceNode extends SourceNode<DataFrame> {
             },
             (error: any, device: Device) => {
                 if (error) {
+                    this.logger('error', error);
                     return;
                 }
 
                 const frame = new DataFrame();
                 const beacon = new RFTransmitterObject(device.id);
                 beacon.displayName = device.localName;
+                beacon.txPower = device.txPowerLevel;
 
                 frame.addObject(beacon);
                 frame.source = this.source;
                 frame.source.removeRelativePositions(beacon.uid);
                 frame.source.addRelativePosition(new RelativeRSSIPosition(beacon, device.rssi));
-
                 this.push(frame);
-                this._timer = setTimeout(this._scan.bind(this), this.options.interval);
             },
         );
     }
@@ -91,5 +88,8 @@ export class BLESourceNode extends SourceNode<DataFrame> {
 }
 
 export interface BLESourceNodeOptions extends SensorSourceOptions {
+    /**
+     * List of UUIDs that should be included in the result scan.
+     */
     uuids: string[];
 }

@@ -1,4 +1,4 @@
-import { DataFrame, SourceNode, RFTransmitterObject, RelativeRSSIPosition, SensorSourceOptions } from '@openhps/core';
+import { DataFrame, SourceNode, RelativeRSSIPosition, SensorSourceOptions, WLANObject } from '@openhps/core';
 import * as WifiManager from 'react-native-wifi-reborn';
 
 /**
@@ -18,16 +18,19 @@ export class WLANSourceNode extends SourceNode<DataFrame> {
 
     private _onWifiInit(): Promise<void> {
         return new Promise((resolve, reject) => {
-            WifiManager.isEnabled().then(status => {
-                if (!status) {
-                    return reject(new Error(`WiFi not enabled!`));
-                }
-                if (this.options.autoStart) {
-                    return this.start();
-                } else {
-                    return Promise.resolve();
-                }
-            }).then(resolve).catch(reject);
+            WifiManager.isEnabled()
+                .then((status) => {
+                    if (!status) {
+                        return reject(new Error(`WiFi not enabled!`));
+                    }
+                    if (this.options.autoStart) {
+                        return this.start();
+                    } else {
+                        return Promise.resolve();
+                    }
+                })
+                .then(resolve)
+                .catch(reject);
         });
     }
 
@@ -48,9 +51,14 @@ export class WLANSourceNode extends SourceNode<DataFrame> {
         WifiManager.reScanAndLoadWifiList()
             .then((wifiList: Array<WifiManager.WifiEntry>) => {
                 this.push(this.parseList(wifiList));
-            }).catch((ex: Error) => {
+            })
+            .catch((ex: Error) => {
                 this.logger('error', ex);
-            }).finally(() => {
+            })
+            .finally(() => {
+                if (!this._timer) {
+                    return;
+                }
                 this._timer = setTimeout(this._scan.bind(this), this.options.interval);
             });
     }
@@ -66,12 +74,12 @@ export class WLANSourceNode extends SourceNode<DataFrame> {
     public parseList(wifiList: Array<WifiManager.WifiEntry>): DataFrame {
         const frame = new DataFrame();
         frame.source = this.source;
-        frame.source.relativePositions
-            .forEach(pos => 
-                frame.source.removeRelativePositions(pos.referenceObjectUID));
+        frame.source.relativePositions.forEach((pos) => frame.source.removeRelativePositions(pos.referenceObjectUID));
         wifiList.forEach((value) => {
-            const ap = new RFTransmitterObject(value.BSSID);
+            const ap = new WLANObject(value.BSSID);
             ap.displayName = value.SSID;
+            ap.channel = value.frequency;
+            ap.capabilities = value.capabilities;
             frame.addObject(ap);
             frame.source.addRelativePosition(new RelativeRSSIPosition(ap, value.level));
         });
