@@ -11,20 +11,21 @@ export class BLESourceNode extends SourceNode<DataFrame> {
 
     constructor(options?: BLESourceNodeOptions) {
         super(options);
-        this.options.interval = this.options.interval || 3000;
-        if (this.options.autoStart) {
-            this.once('build', this.start.bind(this));
-        }
+        this.options.interval = this.options.interval || 100;
+        this.once('build', this._onBleInit.bind(this));
         this.once('destroy', this.stop.bind(this));
     }
 
-    public start(): Promise<void> {
+    private _onBleInit(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             this._manager = new BleManager();
             this._manager.onStateChange((state) => {
                 if (state === 'PoweredOn') {
-                    resolve();
-                    this.scan();
+                    if (this.options.autoStart) {
+                        this.start().then(resolve).catch(reject);
+                    } else {
+                        resolve();
+                    }
                 } else {
                     reject(state);
                 }
@@ -32,44 +33,51 @@ export class BLESourceNode extends SourceNode<DataFrame> {
         });
     }
 
+    public start(): Promise<void> {
+        return new Promise((resolve) => {
+            this._timer = setInterval(this._scan.bind(this), this.options.interval);
+            resolve();
+        });
+    }
+
     public stop(): Promise<void> {
         return new Promise<void>((resolve) => {
             clearInterval(this._timer);
+            this._timer = undefined;
             this._manager.stopDeviceScan();
             resolve();
         });
     }
 
-    public scan(): void {
-        this._timer = setInterval(() => {
-            this._manager.stopDeviceScan();
-            this.source.relativePositions.forEach((relativePosition) => {
-                this.source.removeRelativePositions(relativePosition.referenceObjectUID);
-            });
-            this._manager.startDeviceScan(
-                this.options.uuids,
-                {
-                    allowDuplicates: true,
-                    scanMode: ScanMode.LowLatency,
-                },
-                (error: any, device: Device) => {
-                    if (error) {
-                        return;
-                    }
+    private _scan(): void {
+        this._manager.stopDeviceScan();
+        this.source.relativePositions.forEach((relativePosition) => {
+            this.source.removeRelativePositions(relativePosition.referenceObjectUID);
+        });
+        this._manager.startDeviceScan(
+            this.options.uuids,
+            {
+                allowDuplicates: true,
+                scanMode: ScanMode.LowLatency,
+            },
+            (error: any, device: Device) => {
+                if (error) {
+                    this.logger('error', error);
+                    return;
+                }
 
-                    const frame = new DataFrame();
-                    const beacon = new RFTransmitterObject(device.id);
-                    beacon.displayName = device.localName;
+                const frame = new DataFrame();
+                const beacon = new RFTransmitterObject(device.id);
+                beacon.displayName = device.localName;
+                beacon.txPower = device.txPowerLevel;
 
-                    frame.addObject(beacon);
-                    frame.source = this.source;
-                    frame.source.removeRelativePositions(beacon.uid);
-                    frame.source.addRelativePosition(new RelativeRSSIPosition(beacon, device.rssi));
-
-                    this.push(frame);
-                },
-            );
-        }, this.options.interval);
+                frame.addObject(beacon);
+                frame.source = this.source;
+                frame.source.removeRelativePositions(beacon.uid);
+                frame.source.addRelativePosition(new RelativeRSSIPosition(beacon, device.rssi));
+                this.push(frame);
+            },
+        );
     }
 
     public onPull(): Promise<DataFrame> {
@@ -80,5 +88,8 @@ export class BLESourceNode extends SourceNode<DataFrame> {
 }
 
 export interface BLESourceNodeOptions extends SensorSourceOptions {
+    /**
+     * List of UUIDs that should be included in the result scan.
+     */
     uuids: string[];
 }

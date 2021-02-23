@@ -1,4 +1,4 @@
-import { DataFrame, SourceNode, GeographicalPosition, LengthUnit, SensorSourceOptions } from '@openhps/core';
+import { DataFrame, SourceNode, GeographicalPosition, SensorSourceOptions } from '@openhps/core';
 import * as Geolocation from 'react-native-geolocation-service';
 
 /**
@@ -23,7 +23,6 @@ export class GeolocationSourceNode extends SourceNode<DataFrame> {
                     const geoPos = new GeographicalPosition();
                     geoPos.accuracy = position.coords.accuracy;
                     geoPos.altitude = position.coords.altitude;
-                    geoPos.altitudeUnit = LengthUnit.METER;
                     geoPos.latitude = position.coords.latitude;
                     geoPos.longitude = position.coords.longitude;
                     this.source.setPosition(geoPos);

@@ -5,27 +5,30 @@ import {
     Acceleration,
     Orientation,
     AngularVelocity,
-    RelativeValue,
-    Euler,
+    Quaternion,
+    Magnetism,
 } from '@openhps/core';
-import { accelerometer, gyroscope, setUpdateIntervalForType, SensorTypes, magnetometer } from 'react-native-sensors';
+import {
+    accelerometer,
+    gyroscope,
+    setUpdateIntervalForType,
+    magnetometer,
+    SensorData,
+    orientation,
+    OrientationData,
+} from 'react-native-sensors';
 import { Subscription } from 'rxjs';
-import { Platform } from 'react-native';
 
 /**
  * IMU source node using react-native-sensors.
  */
 export class IMUSourceNode extends SourceNode<IMUDataFrame> {
-    protected options: SensorSourceOptions;
-    private _subscriptionAcc: Subscription;
-    private _subscriptionGyro: Subscription;
-    private _subscriptionMag: Subscription;
+    protected options: IMUSourceNodeOptions;
+    private _subscriptions: Map<Sensor, Subscription> = new Map();
+    private _values: Map<Sensor, any> = new Map();
     private _lastPush = 0;
-    private _rotation: any;
-    private _rotationRate: any;
-    private _acceleration: any;
 
-    constructor(options?: SensorSourceOptions) {
+    constructor(options?: IMUSourceNodeOptions) {
         super(options);
         this.options.interval = this.options.interval || 100;
         if (this.options.autoStart) {
@@ -36,51 +39,36 @@ export class IMUSourceNode extends SourceNode<IMUDataFrame> {
 
     public start(): Promise<void> {
         return new Promise<void>((resolve) => {
-            setUpdateIntervalForType(SensorTypes.accelerometer, this.options.interval);
-            setUpdateIntervalForType(SensorTypes.gyroscope, this.options.interval);
-            setUpdateIntervalForType(SensorTypes.magnetometer, this.options.interval);
-            this._subscriptionMag = magnetometer.subscribe((rotation) => {
-                this._rotation = rotation;
-                if (
-                    this._lastPush < rotation.timestamp &&
-                    this._acceleration !== undefined &&
-                    this._rotationRate !== undefined
-                ) {
-                    this._lastPush = rotation.timestamp;
-                    this.createFrame();
-                }
-            });
-            this._subscriptionGyro = gyroscope.subscribe((rotationRate) => {
-                this._rotationRate = rotationRate;
-                if (
-                    this._lastPush < rotationRate.timestamp &&
-                    this._acceleration !== undefined &&
-                    this._rotation !== undefined
-                ) {
-                    this._lastPush = rotationRate.timestamp;
-                    this.createFrame();
-                }
-            });
-            this._subscriptionAcc = accelerometer.subscribe((acceleration) => {
-                this._acceleration = acceleration;
-                if (
-                    this._lastPush < acceleration.timestamp &&
-                    this._rotation !== undefined &&
-                    this._rotationRate !== undefined
-                ) {
-                    this._lastPush = acceleration.timestamp;
-                    this.createFrame();
-                }
+            this.options.sensors.forEach((sensor) => {
+                setUpdateIntervalForType(sensor, this.options.interval);
+                const sensorInstance = this.findSensorInstance(sensor);
+                const subscription = sensorInstance.subscribe((value: any) => {
+                    this._values.set(sensor, value);
+                    if (this._isUpdated()) {
+                        this._lastPush = value.timestamp;
+                        this.createFrame().catch((ex) => {
+                            this.logger('error', ex);
+                        });
+                    }
+                });
+                this._subscriptions.set(sensor, subscription);
             });
             resolve();
         });
     }
 
+    private _isUpdated(): boolean {
+        return (
+            Array.from(this._values.values()).filter((sensor) => sensor.timestamp > this._lastPush).length ===
+            this.options.sensors.length
+        );
+    }
+
     public stop(): Promise<void> {
         return new Promise<void>((resolve) => {
-            this._subscriptionAcc.unsubscribe();
-            this._subscriptionGyro.unsubscribe();
-            this._subscriptionMag.unsubscribe();
+            this._subscriptions.forEach((value) => value.unsubscribe());
+            this._subscriptions = new Map();
+            this._values = new Map();
             resolve();
         });
     }
@@ -88,36 +76,29 @@ export class IMUSourceNode extends SourceNode<IMUDataFrame> {
     public createFrame(): Promise<void> {
         return new Promise<void>((resolve) => {
             const dataFrame = new IMUDataFrame();
-
-            if (Platform.OS === 'android') {
-                dataFrame.acceleration = new Acceleration(
-                    this._acceleration.x / 9.81,
-                    this._acceleration.y / 9.81,
-                    this._acceleration.z / 9.81,
-                );
-            } else {
-                dataFrame.acceleration = new Acceleration(
-                    this._acceleration.x,
-                    this._acceleration.y,
-                    this._acceleration.z,
-                );
-            }
-
-            dataFrame.absoluteOrientation = Orientation.fromEuler(
-                new Euler(this._rotation.x, this._rotation.y, this._rotation.z),
-            );
-            dataFrame.angularVelocity = new AngularVelocity(
-                this._rotationRate.x,
-                this._rotationRate.y,
-                this._rotationRate.z,
-            );
-
-            dataFrame.frequency = 1 / this.options.interval;
             dataFrame.source = this.source;
 
-            dataFrame.source.addRelativePosition(new RelativeValue('MAG_X', this._rotation.x));
-            dataFrame.source.addRelativePosition(new RelativeValue('MAG_Y', this._rotation.y));
-            dataFrame.source.addRelativePosition(new RelativeValue('MAG_Z', this._rotation.z));
+            const acceleration: SensorData = this._values.get('accelerometer');
+            const magnetometer: SensorData = this._values.get('magnetometer');
+            const rotationRate: SensorData = this._values.get('gyroscope');
+            const orientation: OrientationData = this._values.get('orientation');
+
+            if (acceleration) {
+                dataFrame.acceleration = new Acceleration(acceleration.x, acceleration.y, acceleration.z);
+            }
+            if (orientation) {
+                dataFrame.absoluteOrientation = Orientation.fromQuaternion(
+                    new Quaternion(orientation.qx, orientation.qy, orientation.qz, orientation.qw),
+                );
+            }
+            if (rotationRate) {
+                dataFrame.angularVelocity = new AngularVelocity(rotationRate.x, rotationRate.y, rotationRate.z);
+            }
+            if (magnetometer) {
+                dataFrame.magnetism = new Magnetism(magnetometer.x, magnetometer.y, magnetometer.z);
+            }
+
+            dataFrame.frequency = 1 / this.options.interval;
 
             this.push(dataFrame);
             resolve();
@@ -129,4 +110,25 @@ export class IMUSourceNode extends SourceNode<IMUDataFrame> {
             resolve(undefined);
         });
     }
+
+    protected findSensorInstance(sensor: Sensor): any {
+        switch (sensor) {
+            case 'orientation':
+                return orientation;
+            case 'magnetometer':
+                return magnetometer;
+            case 'accelerometer':
+                return accelerometer;
+            case 'gyroscope':
+                return gyroscope;
+            default:
+                return undefined;
+        }
+    }
 }
+
+export interface IMUSourceNodeOptions extends SensorSourceOptions {
+    sensors: Sensor[];
+}
+
+type Sensor = 'accelerometer' | 'magnetometer' | 'orientation' | 'gyroscope';
