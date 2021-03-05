@@ -23,7 +23,8 @@
   "jsdelivr": "dist/web/openhps-react-native.min.js",
   "files": [
     "dist/**/*",
-    "src/**/*"
+    "src/**/*",
+    "android/**/*"
   ],
   "scripts": {
     "test": "mocha --config test/.mocharc.json",
