@@ -11,12 +11,13 @@ import {
 import {
     accelerometer,
     gyroscope,
-    setUpdateIntervalForType,
+    setUpdateInterval,
     magnetometer,
     SensorData,
     orientation,
     OrientationData,
-} from 'react-native-sensors';
+    SensorType,
+} from '../sensors';
 import { Subscription } from 'rxjs';
 
 /**
@@ -24,9 +25,10 @@ import { Subscription } from 'rxjs';
  */
 export class IMUSourceNode extends SourceNode<IMUDataFrame> {
     protected options: IMUSourceNodeOptions;
-    private _subscriptions: Map<Sensor, Subscription> = new Map();
-    private _values: Map<Sensor, any> = new Map();
+    private _subscriptions: Map<SensorType, Subscription> = new Map();
+    private _values: Map<SensorType, any> = new Map();
     private _lastPush = 0;
+    private _running = false;
 
     constructor(options?: IMUSourceNodeOptions) {
         super(options);
@@ -39,10 +41,16 @@ export class IMUSourceNode extends SourceNode<IMUDataFrame> {
 
     public start(): Promise<void> {
         return new Promise<void>((resolve) => {
+            this._running = true;
+            if (this._subscriptions.size > 0) {
+                return resolve();
+            }
+
             this.options.sensors.forEach((sensor) => {
-                setUpdateIntervalForType(sensor, this.options.interval);
+                setUpdateInterval(sensor, this.options.interval);
                 const sensorInstance = this.findSensorInstance(sensor);
                 const subscription = sensorInstance.subscribe((value: any) => {
+                    if (!this._running) return;
                     this._values.set(sensor, value);
                     if (this._isUpdated()) {
                         this._lastPush = value.timestamp;
@@ -66,9 +74,13 @@ export class IMUSourceNode extends SourceNode<IMUDataFrame> {
 
     public stop(): Promise<void> {
         return new Promise<void>((resolve) => {
-            this._subscriptions.forEach((value) => value.unsubscribe());
-            this._subscriptions = new Map();
-            this._values = new Map();
+            if (this.options.softStop) {
+                this._running = false;
+            } else {
+                this._subscriptions.forEach((value) => value.unsubscribe());
+                this._subscriptions = new Map();
+                this._values = new Map();
+            }
             resolve();
         });
     }
@@ -98,7 +110,7 @@ export class IMUSourceNode extends SourceNode<IMUDataFrame> {
                 dataFrame.magnetism = new Magnetism(magnetometer.x, magnetometer.y, magnetometer.z);
             }
 
-            dataFrame.frequency = 1 / this.options.interval;
+            dataFrame.frequency = 1000 / this.options.interval;
 
             this.push(dataFrame);
             resolve();
@@ -111,7 +123,7 @@ export class IMUSourceNode extends SourceNode<IMUDataFrame> {
         });
     }
 
-    protected findSensorInstance(sensor: Sensor): any {
+    protected findSensorInstance(sensor: SensorType): any {
         switch (sensor) {
             case 'orientation':
                 return orientation;
@@ -128,7 +140,6 @@ export class IMUSourceNode extends SourceNode<IMUDataFrame> {
 }
 
 export interface IMUSourceNodeOptions extends SensorSourceOptions {
-    sensors: Sensor[];
+    sensors: SensorType[];
+    softStop?: boolean;
 }
-
-type Sensor = 'accelerometer' | 'magnetometer' | 'orientation' | 'gyroscope';

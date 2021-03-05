@@ -9,6 +9,7 @@
         "sourceMap": true,
         "outDir": "./dist/cjs",
         "declaration": true,
+        "esModuleInterop": true,
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "skipLibCheck": true
