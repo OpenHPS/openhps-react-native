@@ -17,7 +17,7 @@ public class RNSensorsPackage implements ReactPackage {
       return Arrays.<NativeModule>asList(
         new RNSensor(reactContext, "Gyroscope", Sensor.TYPE_GYROSCOPE),
         new RNSensor(reactContext, "Accelerometer", Sensor.TYPE_ACCELEROMETER),
-        new RNSensor(reactContext, "LinearAccelerometer", Sensor.TYPE_LINEAR_ACCELEROMETER),
+        new RNSensor(reactContext, "LinearAccelerometer", Sensor.TYPE_LINEAR_ACCELERATION),
         new RNSensor(reactContext, "Magnetometer", Sensor.TYPE_MAGNETIC_FIELD),
         new RNSensor(reactContext, "Barometer", Sensor.TYPE_PRESSURE),
         new RNSensor(reactContext, "Orientation", Sensor.TYPE_ROTATION_VECTOR)
