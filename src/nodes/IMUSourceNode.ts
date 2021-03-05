@@ -11,14 +11,12 @@ import {
 import {
     accelerometer,
     gyroscope,
-    setUpdateInterval,
+    setUpdateIntervalForType,
     magnetometer,
     SensorData,
     orientation,
     OrientationData,
-    SensorType,
-    linearaccelerometer,
-} from '../sensors';
+} from 'react-native-sensors';
 import { Subscription } from 'rxjs';
 
 /**
@@ -48,7 +46,7 @@ export class IMUSourceNode extends SourceNode<IMUDataFrame> {
             }
 
             this.options.sensors.forEach((sensor) => {
-                setUpdateInterval(sensor, this.options.interval);
+                setUpdateIntervalForType(sensor.toString().toLowerCase() as any, this.options.interval);
                 const sensorInstance = this.findSensorInstance(sensor);
                 const subscription = sensorInstance.subscribe((value: any) => {
                     if (!this._running) return;
@@ -91,21 +89,13 @@ export class IMUSourceNode extends SourceNode<IMUDataFrame> {
             const dataFrame = new IMUDataFrame();
             dataFrame.source = this.source;
 
-            const linearAcceleration: SensorData = this._values.get('linearaccelerometer');
-            const acceleration: SensorData = this._values.get('accelerometer');
-            const magnetometer: SensorData = this._values.get('magnetometer');
-            const rotationRate: SensorData = this._values.get('gyroscope');
-            const orientation: OrientationData = this._values.get('orientation');
+            const acceleration: SensorData = this._values.get(SensorType.ACCELEROMETER);
+            const magnetometer: SensorData = this._values.get(SensorType.MAGNETOMETER);
+            const rotationRate: SensorData = this._values.get(SensorType.GYROSCOPE);
+            const orientation: OrientationData = this._values.get(SensorType.ORIENTATION);
 
             if (acceleration) {
                 dataFrame.acceleration = new Acceleration(acceleration.x, acceleration.y, acceleration.z);
-            }
-            if (linearaccelerometer) {
-                dataFrame.linearAcceleration = new Acceleration(
-                    linearAcceleration.x,
-                    linearAcceleration.y,
-                    linearAcceleration.z,
-                );
             }
             if (orientation) {
                 dataFrame.absoluteOrientation = Orientation.fromQuaternion(
@@ -134,15 +124,13 @@ export class IMUSourceNode extends SourceNode<IMUDataFrame> {
 
     protected findSensorInstance(sensor: SensorType): any {
         switch (sensor) {
-            case 'linearaccelerometer':
-                return linearaccelerometer;
-            case 'orientation':
+            case SensorType.ORIENTATION:
                 return orientation;
-            case 'magnetometer':
+            case SensorType.MAGNETOMETER:
                 return magnetometer;
-            case 'accelerometer':
+            case SensorType.ACCELEROMETER:
                 return accelerometer;
-            case 'gyroscope':
+            case SensorType.GYROSCOPE:
                 return gyroscope;
             default:
                 return undefined;
@@ -153,4 +141,11 @@ export class IMUSourceNode extends SourceNode<IMUDataFrame> {
 export interface IMUSourceNodeOptions extends SensorSourceOptions {
     sensors: SensorType[];
     softStop?: boolean;
+}
+
+export enum SensorType {
+    ACCELEROMETER,
+    GYROSCOPE,
+    MAGNETOMETER,
+    ORIENTATION,
 }

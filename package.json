@@ -23,8 +23,7 @@
   "jsdelivr": "dist/web/openhps-react-native.min.js",
   "files": [
     "dist/**/*",
-    "src/**/*",
-    "android/**/*"
+    "src/**/*"
   ],
   "scripts": {
     "test": "mocha --config test/.mocharc.json",
@@ -44,9 +43,7 @@
     "openhps",
     "react-native"
   ],
-  "dependencies": {
-    "rxjs": "^6.6.6"
-  },
+  "dependencies": {},
   "peerDependencies": {
     "@openhps/core": ">=0.3.0-alpha.7",
     "@openhps/imu": ">=0.1.0-alpha.1",
@@ -54,7 +51,8 @@
     "react-native": "^0.63.4",
     "react-native-ble-plx": "^2.0.2",
     "react-native-geolocation-service": "^5.2.0",
-    "react-native-wifi-reborn": "^4.3.7"
+    "react-native-wifi-reborn": "^4.3.7",
+    "react-native-sensors": "^7.2.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",
@@ -82,6 +80,7 @@
     "react-native": "^0.63.4",
     "react-native-ble-plx": "^2.0.2",
     "react-native-geolocation-service": "^5.2.0",
+    "react-native-sensors": "^7.2.0",
     "react-native-wifi-reborn": "^4.3.7",
     "reflect-metadata": ">=0.1.13",
     "shx": "^0.3.3",
