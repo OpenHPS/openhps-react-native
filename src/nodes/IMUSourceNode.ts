@@ -134,6 +134,8 @@ export class IMUSourceNode extends SourceNode<IMUDataFrame> {
 
     protected findSensorInstance(sensor: SensorType): any {
         switch (sensor) {
+            case 'linearaccelerometer':
+                return linearaccelerometer;
             case 'orientation':
                 return orientation;
             case 'magnetometer':
