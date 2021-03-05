@@ -31,7 +31,7 @@ export class IMUSourceNode extends SourceNode<IMUDataFrame> {
 
     constructor(options?: IMUSourceNodeOptions) {
         super(options);
-        this.options.interval = this.options.interval || 100;
+        this.options.interval = this.options.interval || 50;
         if (this.options.autoStart) {
             this.once('build', this.start.bind(this));
         }
@@ -46,7 +46,7 @@ export class IMUSourceNode extends SourceNode<IMUDataFrame> {
             }
 
             this.options.sensors.forEach((sensor) => {
-                setUpdateIntervalForType(sensor.toString().toLowerCase() as any, this.options.interval);
+                setUpdateIntervalForType(SensorType[sensor].toLowerCase() as any, this.options.interval);
                 const sensorInstance = this.findSensorInstance(sensor);
                 const subscription = sensorInstance.subscribe((value: any) => {
                     if (!this._running) return;

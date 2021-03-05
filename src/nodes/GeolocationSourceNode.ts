@@ -5,20 +5,21 @@ import * as Geolocation from 'react-native-geolocation-service';
  * Geolocation source node using react-native-geolocation-service.
  */
 export class GeolocationSourceNode extends SourceNode<DataFrame> {
-    protected options: SensorSourceOptions;
-    private _timer: number;
+    protected options: GeolocationSourceOptions;
+    private _watchId: number;
 
     constructor(options?: SensorSourceOptions) {
         super(options);
         this.options.interval = this.options.interval || 1000;
+        this.options.distanceFilter = this.options.distanceFilter || 1;
         if (this.options.autoStart) {
             this.once('build', this.start.bind(this));
         }
     }
 
     public start(): Promise<void> {
-        return new Promise<void>((resolve, reject) => {
-            Geolocation.getCurrentPosition(
+        return new Promise<void>((resolve) => {
+            this._watchId = Geolocation.watchPosition(
                 (position) => {
                     const geoPos = new GeographicalPosition();
                     geoPos.accuracy = position.coords.accuracy;
@@ -26,13 +27,16 @@ export class GeolocationSourceNode extends SourceNode<DataFrame> {
                     geoPos.latitude = position.coords.latitude;
                     geoPos.longitude = position.coords.longitude;
                     this.source.setPosition(geoPos);
-                    const frame = new DataFrame(this.source);
-                    this.push(frame);
+                    this.push(new DataFrame(this.source));
                 },
                 (error) => {
-                    reject(error);
+                    this.logger('error', error);
                 },
-                { enableHighAccuracy: true, timeout: 15000, maximumAge: this.options.interval },
+                {
+                    interval: this.options.interval,
+                    enableHighAccuracy: true,
+                    distanceFilter: this.options.distanceFilter,
+                },
             );
             resolve();
         });
@@ -40,7 +44,7 @@ export class GeolocationSourceNode extends SourceNode<DataFrame> {
 
     public stop(): Promise<void> {
         return new Promise<void>((resolve) => {
-            clearInterval(this._timer);
+            Geolocation.clearWatch(this._watchId);
             resolve();
         });
     }
@@ -50,4 +54,8 @@ export class GeolocationSourceNode extends SourceNode<DataFrame> {
             resolve(undefined);
         });
     }
+}
+
+export interface GeolocationSourceOptions extends SensorSourceOptions {
+    distanceFilter?: number;
 }

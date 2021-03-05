@@ -10,7 +10,7 @@ export class WLANSourceNode extends SourceNode<DataFrame> {
 
     constructor(options?: SensorSourceOptions) {
         super(options);
-        this.options.interval = this.options.interval || 100;
+        this.options.interval = this.options.interval || 0;
 
         this.once('build', this._onWifiInit.bind(this));
         this.once('destroy', this.stop.bind(this));
