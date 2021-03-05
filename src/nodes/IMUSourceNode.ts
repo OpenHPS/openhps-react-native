@@ -101,15 +101,11 @@ export class IMUSourceNode extends SourceNode<IMUDataFrame> {
                 dataFrame.acceleration = new Acceleration(acceleration.x, acceleration.y, acceleration.z);
             }
             if (linearaccelerometer) {
-<<<<<<< HEAD
                 dataFrame.linearAcceleration = new Acceleration(
                     linearAcceleration.x,
                     linearAcceleration.y,
                     linearAcceleration.z,
                 );
-=======
-                dataFrame.linearAcceleration = new Acceleration(linearAcceleration.x, linearAcceleration.y, linearAcceleration.z);
->>>>>>> a22e10891819bfd23294af9a1445b5b011a5dade
             }
             if (orientation) {
                 dataFrame.absoluteOrientation = Orientation.fromQuaternion(
