@@ -12,23 +12,43 @@
 </p>
 
 <h3 align="center">
-    <a href="https://github.com/OpenHPS/openhps-core">@openhps/core</a> &mdash; <a href="https://openhps.org/docs/csv">API</a>
+    <a href="https://github.com/OpenHPS/openhps-core">@openhps/core</a> &mdash; <a href="https://openhps.org/docs/react-native">API</a>
 </h3>
 
 <br />
-This component offers react-native nodes.
+This component offers react-native nodes. Each node uses peer dependencies for
+
+## Features
+- ```IMUSourceNode```: IMU source node that uses the internal sensors.
+- ```BLESourceNode```: BLE source node that scans for (specific) BLE advertisements
+- ```WLANSourceNode```: WLAN source node that scans for Wi-Fi access points.
+- ```GeolocationSourceNode```: Processed geolocation data from native APIs.
+
+## Peer Dependencies
+@openhps/react-native uses peer dependencies to create OpenHPS compatible data frames. When using a certain source node, you will have to install one or more of these dependencies manually.
+- [react-native-sensors](https://www.npmjs.com/package/react-native-sensors)
+- [react-native-wifi-reborn](https://www.npmjs.com/package/react-native-wifi-reborn)
+- [react-native-ble-plx](https://www.npmjs.com/package/react-native-ble-plx)
+- [react-native-geolocation-service](https://www.npmjs.com/package/react-native-geolocation-service)
 
 ## Getting Started
 If you have [npm installed](https://www.npmjs.com/get-npm), start using @openhps/react-native with the following command.
 ```bash
 npm install @openhps/react-native --save
 ```
+### Usage
 
-### Features
-- ```IMUSourceNode```: IMU source node that uses the internal sensors.
-- ```BLESourceNode```: BLE source node that scans for (specific) BLE advertisements
-- ```WLANSourceNode```: WLAN source node that scans for Wi-Fi access points.
-- ```GeolocationSourceNode```: Processed geolocation data from native APIs.
+#### BLESourceNode
+The BLE source node scans for Bluetooth low energy devices using react-native-ble-plx as a peer dependency.
+
+#### IMUSourceNode
+The IMU source node uses react-native-sensors as a peer depedency to gather magnetometer, gyroscope, accelerometer and orientation data in an IMUDataFrame.
+
+#### WLANSourceNode
+With the WLAN source node that uses react-native-wifi-reborn as a peer dependency, you can get a complete scan list of Wi-Fi access points. 
+
+#### GeolocationSourceNode
+High level geolocation source node using react-native-geolocation-service.
 
 ## Contributors
 The framework is open source and is mainly developed by PhD Student Maxim Van de Wynckel as part of his research towards *Hybrid Positioning and Implicit Human-Computer Interaction* under the supervision of Prof. Dr. Beat Signer.
