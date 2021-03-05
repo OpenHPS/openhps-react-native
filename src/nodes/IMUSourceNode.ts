@@ -17,6 +17,7 @@ import {
     orientation,
     OrientationData,
     SensorType,
+    linearaccelerometer,
 } from '../sensors';
 import { Subscription } from 'rxjs';
 
@@ -90,6 +91,7 @@ export class IMUSourceNode extends SourceNode<IMUDataFrame> {
             const dataFrame = new IMUDataFrame();
             dataFrame.source = this.source;
 
+            const linearAcceleration: SensorData = this._values.get('linearaccelerometer');
             const acceleration: SensorData = this._values.get('accelerometer');
             const magnetometer: SensorData = this._values.get('magnetometer');
             const rotationRate: SensorData = this._values.get('gyroscope');
@@ -97,6 +99,9 @@ export class IMUSourceNode extends SourceNode<IMUDataFrame> {
 
             if (acceleration) {
                 dataFrame.acceleration = new Acceleration(acceleration.x, acceleration.y, acceleration.z);
+            }
+            if (linearaccelerometer) {
+                dataFrame.linearAcceleration = new Acceleration(linearAcceleration.x, linearAcceleration.y, linearAcceleration.z);
             }
             if (orientation) {
                 dataFrame.absoluteOrientation = Orientation.fromQuaternion(
