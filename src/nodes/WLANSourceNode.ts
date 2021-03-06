@@ -38,6 +38,7 @@ export class WLANSourceNode extends SourceNode<DataFrame> {
         return new Promise<void>((resolve) => {
             // Scan interval
             this._timer = setTimeout(this._scan.bind(this), this.options.interval);
+            this._scan();
             resolve();
         });
     }
