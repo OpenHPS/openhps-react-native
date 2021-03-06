@@ -1,17 +1,15 @@
 import { DataFrame, SourceNode, RFTransmitterObject, RelativeRSSIPosition, SensorSourceOptions } from '@openhps/core';
-import { BleManager, Device, ScanMode } from 'react-native-ble-plx';
+import { BleManager, Device, ScanMode, ScanCallbackType } from 'react-native-ble-plx';
 
 /**
  * BLE source node using react-native-ble-plx.
  */
 export class BLESourceNode extends SourceNode<DataFrame> {
     private _manager: BleManager;
-    private _timer: number;
     protected options: BLESourceNodeOptions;
 
     constructor(options?: BLESourceNodeOptions) {
         super(options);
-        this.options.interval = this.options.interval || 100;
         this.options.uuids = this.options.uuids || null;
         this.once('build', this._onBleInit.bind(this));
         this.once('destroy', this.stop.bind(this));
@@ -34,51 +32,45 @@ export class BLESourceNode extends SourceNode<DataFrame> {
         });
     }
 
-    public start(): Promise<void> {
-        return new Promise((resolve) => {
-            this._timer = setInterval(this._scan.bind(this), this.options.interval);
-            resolve();
-        });
-    }
-
     public stop(): Promise<void> {
         return new Promise<void>((resolve) => {
-            clearInterval(this._timer);
-            this._timer = undefined;
             this._manager.stopDeviceScan();
             resolve();
         });
     }
 
-    private _scan(): void {
-        this._manager.stopDeviceScan();
-        this.source.relativePositions.forEach((relativePosition) => {
-            this.source.removeRelativePositions(relativePosition.referenceObjectUID);
+    public start(): Promise<void> {
+        return new Promise((resolve) => {
+            this._manager.stopDeviceScan();
+            this._manager.startDeviceScan(
+                this.options.uuids,
+                {
+                    allowDuplicates: true,
+                    scanMode: ScanMode.LowLatency,
+                    callbackType: ScanCallbackType.AllMatches,
+                },
+                (error: any, device: Device) => {
+                    if (error) {
+                        this.logger('error', error);
+                        return;
+                    }
+
+                    const frame = new DataFrame();
+                    const beacon = new RFTransmitterObject(device.id);
+                    beacon.displayName = device.localName;
+                    beacon.txPower = device.txPowerLevel;
+                    frame.addObject(beacon);
+
+                    frame.source = this.source;
+                    frame.source.relativePositions.forEach((pos) =>
+                        frame.source.removeRelativePositions(pos.referenceObjectUID),
+                    );
+                    frame.source.addRelativePosition(new RelativeRSSIPosition(beacon, device.rssi));
+                    this.push(frame);
+                },
+            );
+            resolve();
         });
-        this._manager.startDeviceScan(
-            this.options.uuids,
-            {
-                allowDuplicates: true,
-                scanMode: ScanMode.LowLatency,
-            },
-            (error: any, device: Device) => {
-                if (error) {
-                    this.logger('error', error);
-                    return;
-                }
-
-                const frame = new DataFrame();
-                const beacon = new RFTransmitterObject(device.id);
-                beacon.displayName = device.localName;
-                beacon.txPower = device.txPowerLevel;
-
-                frame.addObject(beacon);
-                frame.source = this.source;
-                frame.source.removeRelativePositions(beacon.uid);
-                frame.source.addRelativePosition(new RelativeRSSIPosition(beacon, device.rssi));
-                this.push(frame);
-            },
-        );
     }
 
     public onPull(): Promise<DataFrame> {
