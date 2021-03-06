@@ -71,12 +71,10 @@ export class BLESourceNode extends SourceNode<DataFrame> {
                 const beacon = new RFTransmitterObject(device.id);
                 beacon.displayName = device.localName;
                 beacon.txPower = device.txPowerLevel;
-                frame.addObject(beacon);
 
+                frame.addObject(beacon);
                 frame.source = this.source;
-                frame.source.relativePositions.forEach((pos) =>
-                    frame.source.removeRelativePositions(pos.referenceObjectUID),
-                );
+                frame.source.removeRelativePositions(beacon.uid);
                 frame.source.addRelativePosition(new RelativeRSSIPosition(beacon, device.rssi));
                 this.push(frame);
             },
