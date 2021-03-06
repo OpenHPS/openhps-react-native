@@ -12,6 +12,7 @@ export class BLESourceNode extends SourceNode<DataFrame> {
     constructor(options?: BLESourceNodeOptions) {
         super(options);
         this.options.interval = this.options.interval || 100;
+        this.options.uuids = this.options.uuids || null;
         this.once('build', this._onBleInit.bind(this));
         this.once('destroy', this.stop.bind(this));
     }
@@ -70,10 +71,12 @@ export class BLESourceNode extends SourceNode<DataFrame> {
                 const beacon = new RFTransmitterObject(device.id);
                 beacon.displayName = device.localName;
                 beacon.txPower = device.txPowerLevel;
-
                 frame.addObject(beacon);
+
                 frame.source = this.source;
-                frame.source.removeRelativePositions(beacon.uid);
+                frame.source.relativePositions.forEach((pos) =>
+                    frame.source.removeRelativePositions(pos.referenceObjectUID),
+                );
                 frame.source.addRelativePosition(new RelativeRSSIPosition(beacon, device.rssi));
                 this.push(frame);
             },
@@ -91,5 +94,5 @@ export interface BLESourceNodeOptions extends SensorSourceOptions {
     /**
      * List of UUIDs that should be included in the result scan.
      */
-    uuids: string[];
+    uuids?: string[];
 }
