@@ -40,7 +40,6 @@ export class WLANSourceNode extends SourceNode<DataFrame> {
             // Scan interval
             this._running = true;
             this._timer = setTimeout(this._scan.bind(this), this.options.interval);
-            this._scan();
             resolve();
         });
     }
