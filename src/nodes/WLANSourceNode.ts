@@ -7,6 +7,7 @@ import WifiManager from 'react-native-wifi-reborn';
 export class WLANSourceNode extends SourceNode<DataFrame> {
     protected options: SensorSourceOptions;
     private _timer: number;
+    private _running = false;
 
     constructor(options?: SensorSourceOptions) {
         super(options);
@@ -37,6 +38,7 @@ export class WLANSourceNode extends SourceNode<DataFrame> {
     public start(): Promise<void> {
         return new Promise<void>((resolve) => {
             // Scan interval
+            this._running = true;
             this._timer = setTimeout(this._scan.bind(this), this.options.interval);
             this._scan();
             resolve();
@@ -44,7 +46,7 @@ export class WLANSourceNode extends SourceNode<DataFrame> {
     }
 
     private _scan(): void {
-        if (!this._timer) {
+        if (!this._running) {
             return;
         }
 
@@ -57,7 +59,7 @@ export class WLANSourceNode extends SourceNode<DataFrame> {
                 this.logger('error', ex);
             })
             .finally(() => {
-                if (!this._timer) {
+                if (!this._running) {
                     return;
                 }
                 this._timer = setTimeout(this._scan.bind(this), this.options.interval);
@@ -66,6 +68,7 @@ export class WLANSourceNode extends SourceNode<DataFrame> {
 
     public stop(): Promise<void> {
         return new Promise<void>((resolve) => {
+            this._running = false;
             clearTimeout(this._timer);
             this._timer = undefined;
             resolve();
