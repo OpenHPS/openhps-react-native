@@ -49,6 +49,8 @@ export class WLANSourceNode extends SourceNode<DataFrame> {
             return;
         }
 
+        // Keep scan id as timer identifier
+        const scanId = this._timer;
         // Load wifi list
         WifiManager.reScanAndLoadWifiList()
             .then((wifiList: Array<WifiManager.WifiEntry>) => {
@@ -58,7 +60,7 @@ export class WLANSourceNode extends SourceNode<DataFrame> {
                 this.logger('error', ex);
             })
             .finally(() => {
-                if (!this._running) {
+                if (!this._running || this._timer !== scanId) {
                     return;
                 }
                 this._timer = setTimeout(this._scan.bind(this), this.options.interval);
