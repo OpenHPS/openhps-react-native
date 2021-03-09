@@ -1,4 +1,4 @@
-import { DataFrame, SourceNode, RFTransmitterObject, RelativeRSSIPosition, SensorSourceOptions } from '@openhps/core';
+import { DataFrame, SourceNode, RFTransmitterObject, RelativeRSSI, SensorSourceOptions } from '@openhps/core';
 import { BleManager, Device, ScanMode, ScanCallbackType } from 'react-native-ble-plx';
 
 /**
@@ -65,7 +65,7 @@ export class BLESourceNode extends SourceNode<DataFrame> {
                     frame.source.relativePositions.forEach((pos) =>
                         frame.source.removeRelativePositions(pos.referenceObjectUID),
                     );
-                    frame.source.addRelativePosition(new RelativeRSSIPosition(beacon, device.rssi));
+                    frame.source.addRelativePosition(new RelativeRSSI(beacon, device.rssi));
                     this.push(frame);
                 },
             );

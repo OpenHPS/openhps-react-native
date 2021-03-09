@@ -1,4 +1,4 @@
-import { DataFrame, SourceNode, RelativeRSSIPosition, SensorSourceOptions, WLANObject } from '@openhps/core';
+import { DataFrame, SourceNode, RelativeRSSI, SensorSourceOptions, WLANObject } from '@openhps/core';
 import WifiManager from 'react-native-wifi-reborn';
 
 /**
@@ -83,10 +83,10 @@ export class WLANSourceNode extends SourceNode<DataFrame> {
         wifiList.forEach((value) => {
             const ap = new WLANObject(value.BSSID);
             ap.displayName = value.SSID;
-            ap.channel = value.frequency;
+            ap.frequency = value.frequency;
             ap.capabilities = value.capabilities;
             frame.addObject(ap);
-            frame.source.addRelativePosition(new RelativeRSSIPosition(ap, value.level));
+            frame.source.addRelativePosition(new RelativeRSSI(ap, value.level));
         });
         return frame;
     }
