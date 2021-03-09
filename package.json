@@ -45,7 +45,7 @@
   ],
   "dependencies": {},
   "peerDependencies": {
-    "@openhps/core": ">=0.3.0-alpha.7",
+    "@openhps/core": ">=0.3.0-alpha.12",
     "@openhps/imu": ">=0.1.0-alpha.1",
     "reflect-metadata": ">=0.1.13",
     "react-native": "^0.63.4",
@@ -57,7 +57,7 @@
   "devDependencies": {
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
-    "@openhps/core": ">=0.3.0-alpha.7",
+    "@openhps/core": ">=0.3.0-alpha.12",
     "@openhps/imu": ">=0.1.0-alpha.1",
     "@types/chai": "^4.2.14",
     "@types/mocha": "^8.2.0",
