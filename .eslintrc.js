@@ -19,7 +19,7 @@ module.exports = {
         "@typescript-eslint/no-explicit-any": "off",
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "import/no-cycle": "error",
-        "import/no-unresolved": "off",
+        "import/no-unresolved": ["off", { 'unusedExports': false }],
         "import/named": "off",
         "import/namespace": "off",
         "prettier/prettier": ["error"],

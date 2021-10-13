@@ -20,8 +20,8 @@ This component offers react-native nodes. Each node uses peer dependencies for
 
 ## Features
 - ```IMUSourceNode```: IMU source node that uses the internal sensors.
-- ```BLESourceNode```: BLE source node that scans for (specific) BLE advertisements
-- ```WLANSourceNode```: WLAN source node that scans for Wi-Fi access points.
+- ```BLESourceNode```: BLE source node that scans for (specific) BLE advertisements.
+- ```WLANSourceNode```: WLAN source node that scans for Wi-Fi access points (Android only).
 - ```GeolocationSourceNode```: Processed geolocation data from native APIs.
 
 ## Peer Dependencies
