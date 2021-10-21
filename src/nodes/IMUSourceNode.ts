@@ -1,6 +1,5 @@
 import {
     SourceNode,
-    IMUDataFrame,
     SensorSourceOptions,
     Acceleration,
     Orientation,
@@ -8,6 +7,7 @@ import {
     Quaternion,
     Magnetism,
 } from '@openhps/core';
+import { IMUDataFrame } from '@openhps/imu';
 import {
     accelerometer,
     gyroscope,

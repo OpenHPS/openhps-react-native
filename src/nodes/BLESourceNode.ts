@@ -1,5 +1,6 @@
-import { DataFrame, SourceNode, RFTransmitterObject, RelativeRSSI, SensorSourceOptions } from '@openhps/core';
+import { DataFrame, SourceNode, SensorSourceOptions } from '@openhps/core';
 import { BleManager, Device, ScanMode, ScanCallbackType } from 'react-native-ble-plx';
+import { RFTransmitterObject, RelativeRSSI } from '@openhps/rf';
 
 /**
  * BLE source node using react-native-ble-plx.

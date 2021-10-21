@@ -6,6 +6,8 @@ import {
     LinearVelocity,
     Orientation,
     AngleUnit,
+    Accuracy2D,
+    LengthUnit,
 } from '@openhps/core';
 import * as Geolocation from 'react-native-geolocation-service';
 
@@ -48,7 +50,7 @@ export class GeolocationSourceNode extends SourceNode<DataFrame> {
 
     private _convertPosition(position: Geolocation.GeoPosition): GeographicalPosition {
         const geoPos = new GeographicalPosition();
-        geoPos.accuracy = position.coords.accuracy;
+        geoPos.accuracy = new Accuracy2D(position.coords.accuracy, position.coords.altitudeAccuracy, LengthUnit.METER);
         geoPos.altitude = position.coords.altitude;
         geoPos.latitude = position.coords.latitude;
         geoPos.longitude = position.coords.longitude;

@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches: [ master, dev ]
+  pull_request:
+    branches: [ master, dev ]
+  workflow_dispatch:
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build
+        run: |
+          npm install
+          npm run build
+      - name: Quality
+        run: |
+          npm run lint
+      - name: Publish Documentation
+        uses: actions/upload-artifact@v2
+        with:
+          name: docs
+          path: |
+            docs/out/*
+      - name: Publish Unit Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        if: always()
+        with:
+          files: test-results.xml
+      - name: Upload code coverage
+        uses: codecov/codecov-action@v2
+        with:
+          files: coverage/cobertura-coverage.xml
+          verbose: true
+      - name: Configure Publish
+        run: |
+          git config --global user.name 'CI'
+          git config --global user.email 'ci@openhps.org'
+      - name: Bump version development
+        if: github.ref == 'refs/heads/dev'
+        run: |
+          npm run bump:development
+      - name: Bump version release
+        if: github.ref == 'refs/heads/master'
+        run: |
+          npm run bump:release
+      - name: Publish to NPM
+        uses: JS-DevTools/npm-publish@v1
+        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/dev'
+        with:
+          token: ${{ secrets.NPM_TOKEN }}
+      - name: Publish to GitHub
+        if: success()
+        run: |
+          git push

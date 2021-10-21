@@ -3,11 +3,14 @@
   @openhps/react-native
 </h1>
 <p align="center">
-    <a href="https://ci.mvdw-software.com/job/openhps-react-native/" target="_blank">
-        <img alt="Build Status" src="https://ci.mvdw-software.com/job/openhps-react-native/job/dev/badge/icon">
+    <a href="https://github.com/OpenHPS/openhps-react-native/actions/workflows/main.yml" target="_blank">
+        <img alt="Build Status" src="https://github.com/OpenHPS/openhps-react-native/actions/workflows/main.yml/badge.svg">
     </a>
     <a href="https://codeclimate.com/github/OpenHPS/openhps-react-native/" target="_blank">
         <img alt="Maintainability" src="https://img.shields.io/codeclimate/maintainability/OpenHPS/openhps-react-native">
+    </a>
+    <a href="https://badge.fury.io/js/@openhps%2Freact-native">
+        <img src="https://badge.fury.io/js/@openhps%2Freact-native.svg" alt="npm version" height="18">
     </a>
 </p>
 
@@ -30,6 +33,8 @@ This component offers react-native nodes. Each node uses peer dependencies for
 - [react-native-wifi-reborn](https://www.npmjs.com/package/react-native-wifi-reborn)
 - [react-native-ble-plx](https://www.npmjs.com/package/react-native-ble-plx)
 - [react-native-geolocation-service](https://www.npmjs.com/package/react-native-geolocation-service)
+- @openhps/imu
+- @openhps/rf
 
 ## Getting Started
 If you have [npm installed](https://www.npmjs.com/get-npm), start using @openhps/react-native with the following command.

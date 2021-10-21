@@ -1,5 +1,6 @@
-import { DataFrame, SourceNode, RelativeRSSI, SensorSourceOptions, WLANObject } from '@openhps/core';
+import { DataFrame, SourceNode, SensorSourceOptions } from '@openhps/core';
 import WifiManager from 'react-native-wifi-reborn';
+import { WLANObject, RelativeRSSI } from '@openhps/rf';
 
 /**
  * WLAN source node using react-native-wifi-reborn.
