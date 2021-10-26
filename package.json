@@ -15,8 +15,31 @@
   "types": "./dist/cjs/index.d.ts",
   "module": "./dist/esm/index.js",
   "exports": {
-    "require": "./dist/cjs/index.js",
-    "import": "./dist/esm/index.js"
+    ".": {
+      "require": "./dist/cjs/index.js",
+      "import": "./dist/esm/index.js",
+      "types": "./dist/esm/index.d.ts"
+    },
+    "./imu": {
+      "require": "./dist/cjs/nodes/IMUSourceNode.js",
+      "import": "./dist/esm/nodes/IMUSourceNode.js",
+      "types": "./dist/esm/nodes/IMUSourceNode.d.ts"
+    },
+    "./geolocation": {
+      "require": "./dist/cjs/nodes/GeolocationSourceNode.js",
+      "import": "./dist/esm/nodes/GeolocationSourceNode.js",
+      "types": "./dist/esm/nodes/GeolocationSourceNode.d.ts"
+    },
+    "./wlan": {
+      "require": "./dist/cjs/nodes/WLANSourceNode.js",
+      "import": "./dist/esm/nodes/WLANSourceNode.js",
+      "types": "./dist/esm/nodes/WLANSourceNode.d.ts"
+    },
+    "./ble": {
+      "require": "./dist/cjs/nodes/BLESourceNode.js",
+      "import": "./dist/esm/nodes/BLESourceNode.js",
+      "types": "./dist/esm/nodes/BLESourceNode.d.ts"
+    }
   },
   "unpkg": "dist/web/openhps-react-native.min.js",
   "jsdelivr": "dist/web/openhps-react-native.min.js",
