@@ -12,10 +12,10 @@
     "postinstall": "node ./node_modules/rn-nodeify/cmd.js --hack"
   },
   "dependencies": {
-    "@openhps/core": "^0.3.0-alpha.11",
-    "@openhps/imu": ">=0.1.0-alpha.2",
-    "@openhps/react-native": "0.1.0-alpha.17",
-    "@openhps/socket": ">=0.1.0-alpha.6",
+    "@openhps/core": ">=0.3.2-alpha.3",
+    "@openhps/imu": ">=0.1.2",
+    "@openhps/react-native": "0.1.3",
+    "@openhps/socket": ">=0.1.3",
     "@react-native-community/async-storage": "^1.12.1",
     "@react-native-community/cli-platform-android": "^4.13.0",
     "@tradle/react-native-http": "^2.0.1",
