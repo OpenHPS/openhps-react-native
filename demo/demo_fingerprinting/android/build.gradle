@@ -43,7 +43,7 @@ subprojects {
         if (project.hasProperty("android")) {
             android {
                 compileSdkVersion = 29  // change to match your desired version
-                buildToolsVersion = "31.0.0-rc1"
+                buildToolsVersion = "32.0.0"
             }
         }
     }

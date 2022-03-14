@@ -28,6 +28,7 @@ export class OfflineModel extends EventEmitter {
     }
 
     public init() {
+        console.log("Creating positioning model");
         this._thread = new Thread("external/workers/worker.js");
         this._thread.onmessage = this._onMessage.bind(this);
         this._thread.postMessage(JSON.stringify({

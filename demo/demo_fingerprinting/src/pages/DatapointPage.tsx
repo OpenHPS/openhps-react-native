@@ -9,7 +9,7 @@ import { Datapoint } from '../models/Datapoint';
 import DatapointsOverlay from '../components/DatapointsOverlay';
 import Header from '../components/Header';
 import App from '../App';
-import { Absolute2DPosition, AngleUnit, Quaternion } from '@openhps/core';
+import { Absolute2DPosition, AngleUnit, Orientation } from '@openhps/core';
 
 interface IProps {
     datapoint: Datapoint;
@@ -53,7 +53,7 @@ export default class DatapointPage extends React.Component<IProps, IState> {
       this.props.datapoint.x,
       this.props.datapoint.y
     );
-    position.orientation = Quaternion.fromEuler({
+    position.orientation = Orientation.fromEuler({
       yaw: this.props.datapoint.currentOrientation * 90,
       pitch: 0,
       roll: 0,

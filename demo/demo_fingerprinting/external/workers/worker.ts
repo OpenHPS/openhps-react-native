@@ -21,6 +21,11 @@ let recording: boolean = false;
 let position: AbsolutePosition = undefined;
 let model: Model;
 
+self.postMessage(JSON.stringify({
+    event: 'log',
+    args: ["info", "Thread is started!"]
+}));
+
 self.onmessage = (message: string) => {
     const msg = JSON.parse(message);
     switch (msg.action) {
@@ -39,10 +44,16 @@ self.onmessage = (message: string) => {
          */
         case "connect":
             const service = model.findService(SocketClient);
+            model.logger('debug', {
+                message: "Connection request received to " + msg.url
+            });
             service.connect({
                 path: "/api/v1",
                 url: msg.url
             }).then(() => {
+                // We start the IMU sensor and stop it immediately
+                // This is to flush the buffer of the sensor. You do not need to
+                // do this for BLE/WLAN and only magenetometer data
                 return (model.findNodeByName("imu-source") as IMUSourceNode).start();
             }).then(() => {
                 (model.findNodeByName("imu-source") as IMUSourceNode).stop();
@@ -69,7 +80,7 @@ self.onmessage = (message: string) => {
             recording = true;
             Promise.all([
                 (model.findNodeByName("wlan-source") as WLANSourceNode).start(),
-                (model.findNodeByName("imu-source") as IMUSourceNode).start(),
+                //(model.findNodeByName("imu-source") as IMUSourceNode).start(),
                 (model.findNodeByName("ble-source") as BLESourceNode).start()
             ]).then(() => {
                 self.postMessage(JSON.stringify({
@@ -89,7 +100,7 @@ self.onmessage = (message: string) => {
         case "stopRecording":
             recording = false;
             (model.findNodeByName("wlan-source") as WLANSourceNode).stop();
-            (model.findNodeByName("imu-source") as IMUSourceNode).stop();
+            //(model.findNodeByName("imu-source") as IMUSourceNode).stop();
             (model.findNodeByName("ble-source") as BLESourceNode).stop();
             self.postMessage(JSON.stringify({
                 event: msg.action,
@@ -143,11 +154,15 @@ function init() {
             frame.source.setPosition(position);
         }))
         // Create chunks of 250 frames before sending. Timeout and send frames (smaller than 250x) after 1000 ms
+        // If you enable this. Make sure you have a ".flatten()" function on the server
         .chunk(250, 1000, TimeUnit.MILLISECOND)
         .to(new SocketClientSink({
             uid: "offline"
         }))
         .build().then(m => {
             model = m;
+            model.logger('debug', {
+                message: "Model build!"
+            });
         }).catch(console.error);
 }
