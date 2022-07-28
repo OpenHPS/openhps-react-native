@@ -5,6 +5,6 @@ import DeviceInfo from 'react-native-device-info';
  *
  * @returns {string} Unique identifier
  */
-export function getDeviceUniqueId(): string {
+export function getDeviceUniqueId(): Promise<string> {
     return DeviceInfo.getUniqueId();
 }
