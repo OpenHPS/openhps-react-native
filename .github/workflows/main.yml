@@ -58,35 +58,6 @@ jobs:
         run: |
           npm run lint
 
-  test_coverage:
-    name: Unit tests
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Load dependency cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            **/node_modules
-          key: ${{ runner.os }}-dependencies-v1-${{ hashFiles('package.json') }}
-      - name: Load build cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            **/dist
-          key: ${{ runner.os }}-build-v1-${{ hashFiles('package.json') }}-${{ github.run_number }}
-      - name: Load test and coverage cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            **/test-results.xml
-            **/coverage
-          key: ${{ runner.os }}-test-v1-${{ hashFiles('package.json') }}-${{ github.run_number }}
-      - name: Test
-        run: |
-          npm run cover:ci
-
   documentation:
     name: Build documentation
     needs: build
@@ -141,30 +112,6 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./docs/out
-
-  publish_test_coverage:
-    name: Publish unit tests and coverage
-    needs: test_coverage
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Load test and coverage cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            **/test-results.xml
-            **/coverage
-          key: ${{ runner.os }}-test-v1-${{ hashFiles('package.json') }}-${{ github.run_number }}
-      - name: Publish unit test results
-        uses: EnricoMi/publish-unit-test-result-action@v1
-        if: always()
-        with:
-          files: test-results.xml
-      - name: Upload code coverage
-        uses: codecov/codecov-action@v2
-        with:
-          files: coverage/cobertura-coverage.xml
-          verbose: true
     
   release_dev:
     name: Release DEV
@@ -210,7 +157,6 @@ jobs:
     needs:
       - build
       - quality
-      - test_coverage
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/master'
     steps:
