@@ -118,7 +118,6 @@ jobs:
     needs:
       - build
       - quality
-      - test_coverage
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/dev'
     steps:
