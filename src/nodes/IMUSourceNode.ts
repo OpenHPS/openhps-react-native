@@ -6,8 +6,13 @@ import {
     AngularVelocity,
     Quaternion,
     Magnetism,
+    DataFrame,
+    Accelerometer,
+    AbsoluteOrientationSensor,
+    SensorObject,
+    Gyroscope,
+    Magnetometer,
 } from '@openhps/core';
-import { IMUDataFrame } from '@openhps/imu';
 import {
     accelerometer,
     gyroscope,
@@ -22,10 +27,10 @@ import { Subscription } from 'rxjs';
 /**
  * IMU source node using react-native-sensors.
  */
-export class IMUSourceNode extends SourceNode<IMUDataFrame> {
+export class IMUSourceNode extends SourceNode<DataFrame> {
     protected options: IMUSourceNodeOptions;
-    private _subscriptions: Map<SensorType, Subscription> = new Map();
-    private _values: Map<SensorType, any> = new Map();
+    private _subscriptions: Map<new () => SensorObject, Subscription> = new Map();
+    private _values: Map<new () => SensorObject, any> = new Map();
     private _lastPush = 0;
     private _running = false;
 
@@ -45,8 +50,8 @@ export class IMUSourceNode extends SourceNode<IMUDataFrame> {
                 return resolve();
             }
 
-            this.options.sensors.forEach((sensor) => {
-                setUpdateIntervalForType(SensorType[sensor].toLowerCase() as any, this.options.interval);
+            this.options.sensors.forEach((sensor: new () => SensorObject) => {
+                setUpdateIntervalForType(this.findSensorName(sensor), this.options.interval);
                 const sensorInstance = this.findSensorInstance(sensor);
                 const subscription = sensorInstance.subscribe((value: any) => {
                     if (!this._running) return;
@@ -54,7 +59,7 @@ export class IMUSourceNode extends SourceNode<IMUDataFrame> {
                     if (this._isUpdated()) {
                         this._lastPush = value.timestamp;
                         this.createFrame().catch((ex) => {
-                            this.logger('error', ex);
+                            this.logger('error', 'Unable to create frame!', ex);
                         });
                     }
                 });
@@ -86,51 +91,91 @@ export class IMUSourceNode extends SourceNode<IMUDataFrame> {
 
     public createFrame(): Promise<void> {
         return new Promise<void>((resolve) => {
-            const dataFrame = new IMUDataFrame();
+            const dataFrame = new DataFrame();
             dataFrame.source = this.source;
 
-            const acceleration: SensorData = this._values.get(SensorType.ACCELEROMETER);
-            const magnetometer: SensorData = this._values.get(SensorType.MAGNETOMETER);
-            const rotationRate: SensorData = this._values.get(SensorType.GYROSCOPE);
-            const orientation: OrientationData = this._values.get(SensorType.ORIENTATION);
+            const acceleration: SensorData = this._values.get(Accelerometer);
+            const magnetometer: SensorData = this._values.get(Magnetometer);
+            const rotationRate: SensorData = this._values.get(Gyroscope);
+            const orientation: OrientationData = this._values.get(AbsoluteOrientationSensor);
 
             if (acceleration) {
-                dataFrame.acceleration = new Acceleration(acceleration.x, acceleration.y, acceleration.z);
+                dataFrame.addSensor(
+                    new Accelerometer(
+                        this.uid + '_accl',
+                        new Acceleration(acceleration.x, acceleration.y, acceleration.z),
+                    ),
+                );
             }
             if (orientation) {
-                dataFrame.absoluteOrientation = Orientation.fromQuaternion(
-                    new Quaternion(orientation.qx, orientation.qy, orientation.qz, orientation.qw),
+                dataFrame.addSensor(
+                    new AbsoluteOrientationSensor(
+                        this.uid + '_absoluteorientation',
+                        Orientation.fromQuaternion(
+                            new Quaternion(orientation.qx, orientation.qy, orientation.qz, orientation.qw),
+                        ),
+                    ),
                 );
             }
             if (rotationRate) {
-                dataFrame.angularVelocity = new AngularVelocity(rotationRate.x, rotationRate.y, rotationRate.z);
+                dataFrame.addSensor(
+                    new Gyroscope(
+                        this.uid + '_gyro',
+                        new AngularVelocity(rotationRate.x, rotationRate.y, rotationRate.z),
+                    ),
+                );
             }
             if (magnetometer) {
-                dataFrame.magnetism = new Magnetism(magnetometer.x, magnetometer.y, magnetometer.z);
+                dataFrame.addSensor(
+                    new Magnetometer(
+                        this.uid + '_magnetometer',
+                        new Magnetism(magnetometer.x, magnetometer.y, magnetometer.z),
+                    ),
+                );
             }
 
-            dataFrame.frequency = 1000 / this.options.interval;
+            dataFrame
+                .getObjects()
+                .filter((s) => s instanceof SensorObject)
+                .forEach((sensor: SensorObject) => {
+                    sensor.frequency = 1000 / this.options.interval;
+                });
 
             this.push(dataFrame);
             resolve();
         });
     }
 
-    public onPull(): Promise<IMUDataFrame> {
-        return new Promise<IMUDataFrame>((resolve) => {
+    public onPull(): Promise<DataFrame> {
+        return new Promise<DataFrame>((resolve) => {
             resolve(undefined);
         });
     }
 
-    protected findSensorInstance(sensor: SensorType): any {
+    protected findSensorName(sensor: new () => SensorObject): string {
         switch (sensor) {
-            case SensorType.ORIENTATION:
+            case AbsoluteOrientationSensor:
+                return 'orientation';
+            case Magnetometer:
+                return 'magnetometer';
+            case Accelerometer:
+                return 'accelerometer';
+            case Gyroscope:
+                return 'gyroscope';
+            default:
+                return undefined;
+        }
+    }
+
+    protected findSensorInstance(sensor: new () => SensorObject): any {
+        switch (sensor) {
+            case AbsoluteOrientationSensor:
                 return orientation;
-            case SensorType.MAGNETOMETER:
+            case Magnetometer:
                 return magnetometer;
-            case SensorType.ACCELEROMETER:
+            case Accelerometer:
                 return accelerometer;
-            case SensorType.GYROSCOPE:
+            case Gyroscope:
                 return gyroscope;
             default:
                 return undefined;
@@ -139,13 +184,6 @@ export class IMUSourceNode extends SourceNode<IMUDataFrame> {
 }
 
 export interface IMUSourceNodeOptions extends SensorSourceOptions {
-    sensors: SensorType[];
+    sensors: (new () => SensorObject)[];
     softStop?: boolean;
-}
-
-export enum SensorType {
-    ACCELEROMETER,
-    GYROSCOPE,
-    MAGNETOMETER,
-    ORIENTATION,
 }
