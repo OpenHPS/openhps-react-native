@@ -28,13 +28,13 @@ import { Subscription } from 'rxjs';
  * IMU source node using react-native-sensors.
  */
 export class IMUSourceNode extends SourceNode<DataFrame> {
-    protected options: IMUSourceNodeOptions;
+    protected options: SensorSourceOptions;
     private _subscriptions: Map<new () => SensorObject, Subscription> = new Map();
     private _values: Map<new () => SensorObject, any> = new Map();
     private _lastPush = 0;
     private _running = false;
 
-    constructor(options?: IMUSourceNodeOptions) {
+    constructor(options?: SensorSourceOptions) {
         super(options);
         this.options.interval = this.options.interval || 50;
         if (this.options.autoStart) {
@@ -51,7 +51,7 @@ export class IMUSourceNode extends SourceNode<DataFrame> {
             }
 
             this.options.sensors.forEach((sensor: new () => SensorObject) => {
-                setUpdateIntervalForType(this.findSensorName(sensor), this.options.interval);
+                setUpdateIntervalForType(this.findSensorName(sensor) as any, this.options.interval);
                 const sensorInstance = this.findSensorInstance(sensor);
                 const subscription = sensorInstance.subscribe((value: any) => {
                     if (!this._running) return;
@@ -102,44 +102,41 @@ export class IMUSourceNode extends SourceNode<DataFrame> {
             if (acceleration) {
                 dataFrame.addSensor(
                     new Accelerometer(
-                        this.uid + '_accl',
+                        (this.source ? this.source.uid : this.uid) + '_accl',
                         new Acceleration(acceleration.x, acceleration.y, acceleration.z),
+                        1000 / this.options.interval,
                     ),
                 );
             }
             if (orientation) {
                 dataFrame.addSensor(
                     new AbsoluteOrientationSensor(
-                        this.uid + '_absoluteorientation',
+                        (this.source ? this.source.uid : this.uid) + '_absoluteorientation',
                         Orientation.fromQuaternion(
                             new Quaternion(orientation.qx, orientation.qy, orientation.qz, orientation.qw),
                         ),
+                        1000 / this.options.interval,
                     ),
                 );
             }
             if (rotationRate) {
                 dataFrame.addSensor(
                     new Gyroscope(
-                        this.uid + '_gyro',
+                        (this.source ? this.source.uid : this.uid) + '_gyro',
                         new AngularVelocity(rotationRate.x, rotationRate.y, rotationRate.z),
+                        1000 / this.options.interval,
                     ),
                 );
             }
             if (magnetometer) {
                 dataFrame.addSensor(
                     new Magnetometer(
-                        this.uid + '_magnetometer',
+                        (this.source ? this.source.uid : this.uid) + '_magnetometer',
                         new Magnetism(magnetometer.x, magnetometer.y, magnetometer.z),
+                        1000 / this.options.interval,
                     ),
                 );
             }
-
-            dataFrame
-                .getObjects()
-                .filter((s) => s instanceof SensorObject)
-                .forEach((sensor: SensorObject) => {
-                    sensor.frequency = 1000 / this.options.interval;
-                });
 
             this.push(dataFrame);
             resolve();
@@ -181,9 +178,4 @@ export class IMUSourceNode extends SourceNode<DataFrame> {
                 return undefined;
         }
     }
-}
-
-export interface IMUSourceNodeOptions extends SensorSourceOptions {
-    sensors: (new () => SensorObject)[];
-    softStop?: boolean;
 }

@@ -65,7 +65,7 @@
   ],
   "dependencies": {},
   "peerDependencies": {
-    "@openhps/core": ">=0.4.5",
+    "@openhps/core": ">=0.4.11",
     "reflect-metadata": ">=0.1.13",
     "react-native": ">=0.71.3",
     "@openhps/rf": ">=0.1.17"
@@ -80,7 +80,7 @@
   "devDependencies": {
     "@commitlint/cli": "^17.4.4",
     "@commitlint/config-conventional": "^17.4.4",
-    "@openhps/core": ">=0.4.5",
+    "@openhps/core": ">=0.4.11",
     "@openhps/rf": "^0.1.17",
     "@types/chai": "^4.3.4",
     "@types/mocha": "^10.0.1",

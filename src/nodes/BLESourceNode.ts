@@ -52,7 +52,7 @@ export class BLESourceNode extends SourceNode<DataFrame> {
                 },
                 (error: any, device: Device) => {
                     if (error) {
-                        this.logger('error', error);
+                        this.logger('error', 'Unable to start Bluetooth scan!', error);
                         return;
                     }
 

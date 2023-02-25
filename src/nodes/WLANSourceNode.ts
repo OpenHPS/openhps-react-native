@@ -58,7 +58,7 @@ export class WLANSourceNode extends SourceNode<DataFrame> {
                 this.push(this.parseList(wifiList));
             })
             .catch((ex: Error) => {
-                this.logger('error', ex);
+                this.logger('error', 'Unable to scan for Wi-Fi access points!', ex);
             })
             .finally(() => {
                 if (!this._running || this._timer !== scanId) {

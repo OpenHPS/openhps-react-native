@@ -12,8 +12,8 @@
     "postinstall": "node ./node_modules/rn-nodeify/cmd.js --hack"
   },
   "dependencies": {
-    "@openhps/core": ">=0.4.6",
-    "@openhps/imu": ">=0.1.3",
+    "@openhps/core": ">=0.4.11",
+    "@openhps/imu": "dev",
     "@openhps/react-native": "0.1.7",
     "@openhps/rf": "^0.1.17",
     "@openhps/socket": ">=0.1.5",

@@ -36,7 +36,7 @@ export class GeolocationSourceNode extends SourceNode<DataFrame> {
                     this.push(new DataFrame(this.source));
                 },
                 (error) => {
-                    this.logger('error', error);
+                    this.logger('error', 'Unable to watch for geolocation changes!', error as any);
                 },
                 {
                     interval: this.options.interval,
