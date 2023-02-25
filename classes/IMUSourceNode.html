@@ -21,11 +21,11 @@
 <section class="tsd-panel tsd-hierarchy">
 <h4>Hierarchy</h4>
 <ul class="tsd-hierarchy">
-<li><span class="tsd-signature-type">SourceNode</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">IMUDataFrame</span><span class="tsd-signature-symbol">&gt;</span>
+<li><span class="tsd-signature-type">SourceNode</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">DataFrame</span><span class="tsd-signature-symbol">&gt;</span>
 <ul class="tsd-hierarchy">
 <li><span class="target">IMUSourceNode</span></li></ul></li></ul></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-react-native/blob/29a2b03/src/nodes/IMUSourceNode.ts#L25">src/nodes/IMUSourceNode.ts:25</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-react-native/blob/7d012a4/src/nodes/IMUSourceNode.ts#L30">src/nodes/IMUSourceNode.ts:30</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-index-accordion" open><summary class="tsd-accordion-summary tsd-index-summary">
@@ -54,6 +54,7 @@
 <a href="IMUSourceNode.html#createFrame" class="tsd-index-link tsd-kind-method tsd-parent-kind-class"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>create<wbr/>Frame</span></a>
 <a href="IMUSourceNode.html#eventNames" class="tsd-index-link tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>event<wbr/>Names</span></a>
 <a href="IMUSourceNode.html#findSensorInstance" class="tsd-index-link tsd-kind-method tsd-parent-kind-class tsd-is-protected"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>find<wbr/>Sensor<wbr/>Instance</span></a>
+<a href="IMUSourceNode.html#findSensorName" class="tsd-index-link tsd-kind-method tsd-parent-kind-class tsd-is-protected"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>find<wbr/>Sensor<wbr/>Name</span></a>
 <a href="IMUSourceNode.html#getMaxListeners" class="tsd-index-link tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>get<wbr/>Max<wbr/>Listeners</span></a>
 <a href="IMUSourceNode.html#getOptions" class="tsd-index-link tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>get<wbr/>Options</span></a>
 <a href="IMUSourceNode.html#listenerCount" class="tsd-index-link tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg><span>listener<wbr/>Count</span></a>
@@ -83,25 +84,25 @@
 <section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class"><a id="constructor" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>constructor</span><a href="#constructor" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" id="icon-anchor-a"></path><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5" id="icon-anchor-b"></path><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5" id="icon-anchor-c"></path></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-<li class="tsd-signature tsd-anchor-link" id="constructor.new_IMUSourceNode">new IMUSource<wbr/>Node<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/IMUSourceNodeOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">IMUSourceNodeOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="IMUSourceNode.html" class="tsd-signature-type" data-tsd-kind="Class">IMUSourceNode</a><a href="#constructor.new_IMUSourceNode" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="constructor.new_IMUSourceNode">new IMUSource<wbr/>Node<span class="tsd-signature-symbol">(</span>options<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">SensorSourceOptions</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="IMUSourceNode.html" class="tsd-signature-type" data-tsd-kind="Class">IMUSourceNode</a><a href="#constructor.new_IMUSourceNode" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5><code class="tsd-tag ts-flagOptional">Optional</code> options: <a href="../interfaces/IMUSourceNodeOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">IMUSourceNodeOptions</a></h5></li></ul></div>
+<h5><code class="tsd-tag ts-flagOptional">Optional</code> options: <span class="tsd-signature-type">SensorSourceOptions</span></h5></li></ul></div>
 <h4 class="tsd-returns-title">Returns <a href="IMUSourceNode.html" class="tsd-signature-type" data-tsd-kind="Class">IMUSourceNode</a></h4><aside class="tsd-sources">
-<p>Overrides SourceNode&lt;IMUDataFrame&gt;.constructor</p>
+<p>Overrides SourceNode&lt;DataFrame&gt;.constructor</p>
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-react-native/blob/29a2b03/src/nodes/IMUSourceNode.ts#L32">src/nodes/IMUSourceNode.ts:32</a></li></ul></aside></li></ul></section></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-react-native/blob/7d012a4/src/nodes/IMUSourceNode.ts#L37">src/nodes/IMUSourceNode.ts:37</a></li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Properties</h2>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-protected"><a id="options" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <span>options</span><a href="#options" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
-<div class="tsd-signature">options<span class="tsd-signature-symbol">:</span> <a href="../interfaces/IMUSourceNodeOptions.html" class="tsd-signature-type" data-tsd-kind="Interface">IMUSourceNodeOptions</a></div><aside class="tsd-sources">
+<div class="tsd-signature">options<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">SensorSourceOptions</span></div><aside class="tsd-sources">
 <p>Overrides SourceNode.options</p>
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-react-native/blob/29a2b03/src/nodes/IMUSourceNode.ts#L26">src/nodes/IMUSourceNode.ts:26</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-react-native/blob/7d012a4/src/nodes/IMUSourceNode.ts#L31">src/nodes/IMUSourceNode.ts:31</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a id="captureRejectionSymbol" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <code class="tsd-tag ts-flagReadonly">Readonly</code> <span>capture<wbr/>Rejection<wbr/>Symbol</span><a href="#captureRejectionSymbol" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <div class="tsd-signature">capture<wbr/>Rejection<wbr/>Symbol<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">typeof </span><a href="BLESourceNode.html#captureRejectionSymbol" class="tsd-signature-type" data-tsd-kind="Property">captureRejectionSymbol</a></div><aside class="tsd-sources">
@@ -162,7 +163,7 @@ regular <code>&#39;error&#39;</code> listener is installed.</p>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">DataObject</span></h4><aside class="tsd-sources">
 <p>Inherited from SourceNode.source</p>
 <ul>
-<li>Defined in node_modules/@openhps/core/dist/types/nodes/SourceNode.d.ts:59</li></ul></aside></li></ul></section></section>
+<li>Defined in node_modules/@openhps/core/dist/types/nodes/SourceNode.d.ts:60</li></ul></aside></li></ul></section></section>
 <section class="tsd-panel-group tsd-member-group">
 <h2>Methods</h2>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a id="addListener" class="tsd-anchor"></a>
@@ -203,7 +204,7 @@ regular <code>&#39;error&#39;</code> listener is installed.</p>
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-react-native/blob/29a2b03/src/nodes/IMUSourceNode.ts#L87">src/nodes/IMUSourceNode.ts:87</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-react-native/blob/7d012a4/src/nodes/IMUSourceNode.ts#L92">src/nodes/IMUSourceNode.ts:92</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a id="eventNames" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>event<wbr/>Names</span><a href="#eventNames" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
@@ -223,16 +224,41 @@ listeners. The values in the array are strings or <code>Symbol</code>s.</p>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a id="findSensorInstance" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <span>find<wbr/>Sensor<wbr/>Instance</span><a href="#findSensorInstance" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected">
-<li class="tsd-signature tsd-anchor-link" id="findSensorInstance.findSensorInstance-1">find<wbr/>Sensor<wbr/>Instance<span class="tsd-signature-symbol">(</span>sensor<span class="tsd-signature-symbol">: </span><a href="../enums/SensorType.html" class="tsd-signature-type" data-tsd-kind="Enumeration">SensorType</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><a href="#findSensorInstance.findSensorInstance-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="findSensorInstance.findSensorInstance-1">find<wbr/>Sensor<wbr/>Instance<span class="tsd-signature-symbol">(</span>sensor<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">new </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">SensorObject</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Orientation</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">SensorValue</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Unit</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><a href="#findSensorInstance.findSensorInstance-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
 <div class="tsd-parameters">
 <h4 class="tsd-parameters-title">Parameters</h4>
 <ul class="tsd-parameter-list">
 <li>
-<h5>sensor: <a href="../enums/SensorType.html" class="tsd-signature-type" data-tsd-kind="Enumeration">SensorType</a></h5></li></ul></div>
+<h5>sensor: <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">new </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">SensorObject</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Orientation</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">SensorValue</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Unit</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span></h5>
+<ul class="tsd-parameters">
+<li class="tsd-parameter-signature">
+<ul class="tsd-signatures tsd-kind-constructor">
+<li class="tsd-signature"><span class="tsd-signature-symbol">new </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">SensorObject</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Orientation</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">SensorValue</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Unit</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+<li class="tsd-description">
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">SensorObject</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Orientation</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">SensorValue</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Unit</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></li></ul></li></ul></div>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-react-native/blob/29a2b03/src/nodes/IMUSourceNode.ts#L125">src/nodes/IMUSourceNode.ts:125</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-react-native/blob/7d012a4/src/nodes/IMUSourceNode.ts#L167">src/nodes/IMUSourceNode.ts:167</a></li></ul></aside></li></ul></section>
+<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a id="findSensorName" class="tsd-anchor"></a>
+<h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <span>find<wbr/>Sensor<wbr/>Name</span><a href="#findSensorName" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
+<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected">
+<li class="tsd-signature tsd-anchor-link" id="findSensorName.findSensorName-1">find<wbr/>Sensor<wbr/>Name<span class="tsd-signature-symbol">(</span>sensor<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">new </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">SensorObject</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Orientation</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">SensorValue</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Unit</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><a href="#findSensorName.findSensorName-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-description">
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li>
+<h5>sensor: <span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">new </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">SensorObject</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Orientation</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">SensorValue</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Unit</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">)</span></h5>
+<ul class="tsd-parameters">
+<li class="tsd-parameter-signature">
+<ul class="tsd-signatures tsd-kind-constructor">
+<li class="tsd-signature"><span class="tsd-signature-symbol">new </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">SensorObject</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Orientation</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">SensorValue</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Unit</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></li>
+<li class="tsd-description">
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">SensorObject</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Object</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">Orientation</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">SensorValue</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Unit</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">&gt;</span></h4></li></ul></li></ul></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-react-native/blob/7d012a4/src/nodes/IMUSourceNode.ts#L152">src/nodes/IMUSourceNode.ts:152</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a id="getMaxListeners" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>get<wbr/>Max<wbr/>Listeners</span><a href="#getMaxListeners" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
@@ -313,7 +339,7 @@ set by <code>emitter.setMaxListeners(n)</code> or defaults to <a href="IMUSource
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">DataFrame</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from SourceNode.mergeFrame</p>
 <ul>
-<li>Defined in node_modules/@openhps/core/dist/types/nodes/SourceNode.d.ts:62</li></ul></aside></li></ul></section>
+<li>Defined in node_modules/@openhps/core/dist/types/nodes/SourceNode.d.ts:63</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-inherited tsd-is-external"><a id="mergeObject" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagProtected">Protected</code> <span>merge<wbr/>Object</span><a href="#mergeObject" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-protected tsd-is-inherited tsd-is-external">
@@ -337,7 +363,7 @@ set by <code>emitter.setMaxListeners(n)</code> or defaults to <a href="IMUSource
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">DataObject</span></h4><aside class="tsd-sources">
 <p>Inherited from SourceNode.mergeObject</p>
 <ul>
-<li>Defined in node_modules/@openhps/core/dist/types/nodes/SourceNode.d.ts:70</li></ul></aside></li></ul></section>
+<li>Defined in node_modules/@openhps/core/dist/types/nodes/SourceNode.d.ts:71</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a id="off" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>off</span><a href="#off" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
@@ -372,12 +398,12 @@ set by <code>emitter.setMaxListeners(n)</code> or defaults to <a href="IMUSource
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="onPull" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>on<wbr/>Pull</span><a href="#onPull" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
-<li class="tsd-signature tsd-anchor-link" id="onPull.onPull-1">on<wbr/>Pull<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">IMUDataFrame</span><span class="tsd-signature-symbol">&gt;</span><a href="#onPull.onPull-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
+<li class="tsd-signature tsd-anchor-link" id="onPull.onPull-1">on<wbr/>Pull<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">DataFrame</span><span class="tsd-signature-symbol">&gt;</span><a href="#onPull.onPull-1" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></li>
 <li class="tsd-description">
-<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">IMUDataFrame</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">DataFrame</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Overrides SourceNode.onPull</p>
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-react-native/blob/29a2b03/src/nodes/IMUSourceNode.ts#L119">src/nodes/IMUSourceNode.ts:119</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-react-native/blob/7d012a4/src/nodes/IMUSourceNode.ts#L146">src/nodes/IMUSourceNode.ts:146</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a id="prependListener" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>prepend<wbr/>Listener</span><a href="#prependListener" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
@@ -487,7 +513,7 @@ including any wrappers (such as those created by <code>.once()</code>).</p>
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <p>Inherited from SourceNode.registerService</p>
 <ul>
-<li>Defined in node_modules/@openhps/core/dist/types/nodes/SourceNode.d.ts:60</li></ul></aside></li></ul></section>
+<li>Defined in node_modules/@openhps/core/dist/types/nodes/SourceNode.d.ts:61</li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a id="removeAllListeners" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>remove<wbr/>All<wbr/>Listeners</span><a href="#removeAllListeners" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
@@ -612,7 +638,7 @@ modified for this specific <code>EventEmitter</code> instance. The value can be 
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-react-native/blob/29a2b03/src/nodes/IMUSourceNode.ts#L41">src/nodes/IMUSourceNode.ts:41</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-react-native/blob/7d012a4/src/nodes/IMUSourceNode.ts#L46">src/nodes/IMUSourceNode.ts:46</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class"><a id="stop" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><span>stop</span><a href="#stop" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -620,7 +646,7 @@ modified for this specific <code>EventEmitter</code> instance. The value can be 
 <li class="tsd-description">
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Promise</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">&gt;</span></h4><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/OpenHPS/openhps-react-native/blob/29a2b03/src/nodes/IMUSourceNode.ts#L74">src/nodes/IMUSourceNode.ts:74</a></li></ul></aside></li></ul></section>
+<li>Defined in <a href="https://github.com/OpenHPS/openhps-react-native/blob/7d012a4/src/nodes/IMUSourceNode.ts#L79">src/nodes/IMUSourceNode.ts:79</a></li></ul></aside></li></ul></section>
 <section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a id="getEventListeners" class="tsd-anchor"></a>
 <h3 class="tsd-anchor-link"><code class="tsd-tag ts-flagStatic">Static</code> <span>get<wbr/>Event<wbr/>Listeners</span><a href="#getEventListeners" aria-label="Permalink" class="tsd-anchor-icon"><svg class="icon icon-tabler icon-tabler-link" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><use href="#icon-anchor-a"></use><use href="#icon-anchor-b"></use><use href="#icon-anchor-c"></use></svg></a></h3>
 <ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
@@ -820,6 +846,7 @@ special handling:</p>
 <li class="tsd-kind-method tsd-parent-kind-class"><a href="IMUSourceNode.html#createFrame" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>create<wbr/>Frame</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="IMUSourceNode.html#eventNames" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>event<wbr/>Names</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="IMUSourceNode.html#findSensorInstance" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>find<wbr/>Sensor<wbr/>Instance</a></li>
+<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="IMUSourceNode.html#findSensorName" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>find<wbr/>Sensor<wbr/>Name</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="IMUSourceNode.html#getMaxListeners" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>get<wbr/>Max<wbr/>Listeners</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="IMUSourceNode.html#getOptions" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>get<wbr/>Options</a></li>
 <li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="IMUSourceNode.html#listenerCount" class="tsd-index-link"><svg class="tsd-kind-icon" width="24" height="24" viewBox="0 0 24 24"><use href="#icon-2048-path"></use><use href="#icon-2048-text"></use></svg>listener<wbr/>Count</a></li>
