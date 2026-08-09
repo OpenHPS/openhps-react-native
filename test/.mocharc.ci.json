@@ -1,0 +1,13 @@
+{
+    "$comment": "Standalone on purpose. mocha's `extends` resolves relative to the working directory rather than to this file, and silently drops settings such as `timeout` -- which made async tests fall back to the 2000ms default. Keep in sync with .mocharc.json by hand.",
+    "diff": true,
+    "require": ["reflect-metadata", "test/tsconfig.js"],
+    "extension": ["ts"],
+    "spec": "test/specs/**/*.spec.ts",
+    "ignore": [],
+    "slow": 1500,
+    "timeout": 20000,
+    "recursive": true,
+    "reporter": "mocha-multi-reporters",
+    "reporter-option": ["configFile=test/.mocha-multi-reporters.json"]
+}
