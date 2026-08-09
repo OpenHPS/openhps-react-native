@@ -1,0 +1,14 @@
+name: auto-merge
+
+on: pull_request_target
+
+# Least privilege: the previous fleet config used `permissions: write-all`.
+permissions:
+    contents: write
+    pull-requests: write
+
+jobs:
+    auto-merge:
+        if: github.actor == 'dependabot[bot]'
+        uses: OpenHPS/workflows/.github/workflows/auto-merge.yml@v1
+        secrets: inherit
