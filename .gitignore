@@ -5,3 +5,8 @@ coverage/
 artifacts/
 .nyc_output/
 test-results.xml
+
+# OpenHPS baseline
+.cache/
+xunit.xml
+.DS_Store

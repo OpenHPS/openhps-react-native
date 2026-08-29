@@ -1,5 +1,5 @@
 import { DataFrame, SourceNode, SensorSourceOptions } from '@openhps/core';
-import WifiManager from 'react-native-wifi-reborn';
+import WifiManager, { WifiEntry } from 'react-native-wifi-reborn';
 import { WLANObject, RelativeRSSI } from '@openhps/rf';
 
 /**
@@ -54,7 +54,7 @@ export class WLANSourceNode extends SourceNode<DataFrame> {
         const scanId = this._timer;
         // Load wifi list
         WifiManager.reScanAndLoadWifiList()
-            .then((wifiList: Array<WifiManager.WifiEntry>) => {
+            .then((wifiList: Array<WifiEntry>) => {
                 this.push(this.parseList(wifiList));
             })
             .catch((ex: Error) => {
@@ -77,7 +77,7 @@ export class WLANSourceNode extends SourceNode<DataFrame> {
         });
     }
 
-    public parseList(wifiList: Array<WifiManager.WifiEntry>): DataFrame {
+    public parseList(wifiList: Array<WifiEntry>): DataFrame {
         const frame = new DataFrame();
         frame.source = this.source;
         frame.source.relativePositions.forEach((pos) => frame.source.removeRelativePositions(pos.referenceObjectUID));
@@ -95,7 +95,7 @@ export class WLANSourceNode extends SourceNode<DataFrame> {
     public onPull(): Promise<DataFrame> {
         return new Promise<DataFrame>((resolve, reject) => {
             WifiManager.loadWifiList()
-                .then((wifiList: Array<WifiManager.WifiEntry>) => {
+                .then((wifiList: Array<WifiEntry>) => {
                     resolve(this.parseList(wifiList));
                 })
                 .catch(reject);

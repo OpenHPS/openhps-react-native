@@ -1,6 +1,13 @@
 import React from 'react';
-import { Header as NativeHeader, Left, Body, Button, Title, Icon } from 'native-base';
-import { Actions } from 'react-native-router-flux';
+import {
+  Header as NativeHeader,
+  Left,
+  Body,
+  Button,
+  Title,
+  Icon,
+} from 'native-base';
+import {Actions} from 'react-native-router-flux';
 
 interface IProps {
   title: string;
@@ -8,7 +15,6 @@ interface IProps {
 }
 
 export default class Header extends React.Component<IProps> {
-
   constructor(props: any) {
     super(props);
   }
@@ -20,10 +26,7 @@ export default class Header extends React.Component<IProps> {
       return (
         <Left>
           <Button transparent>
-            <Icon 
-              name='arrow-back'
-              onPress={() => Actions.pop()}
-            />
+            <Icon name="arrow-back" onPress={() => Actions.pop()} />
           </Button>
         </Left>
       );
