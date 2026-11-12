@@ -45,10 +45,10 @@ export default class TrajectoryOverlay extends React.Component<IProps, IState> {
   render() {
     return (
       <View>
-        {this.state.datapoints.map((datapoint) => {
+        {this.state.datapoints.map((datapoint, index) => {
           return (
             <Marker
-              key={Math.random()}
+              key={index}
               ref={(ref) => (datapoint.marker = ref)}
               coordinate={datapoint.coord}
               anchor={{x: 0.5, y: 0.5}}

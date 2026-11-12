@@ -37,6 +37,7 @@ export class IMUSourceNode extends SourceNode<DataFrame> {
     constructor(options?: SensorSourceOptions) {
         super(options);
         this.options.interval = this.options.interval || 50;
+        this.options.sensors = this.options.sensors || [];
         if (this.options.autoStart) {
             this.once('build', this.start.bind(this));
         }

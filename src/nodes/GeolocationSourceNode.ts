@@ -18,17 +18,21 @@ export class GeolocationSourceNode extends SourceNode<DataFrame> {
     protected options: GeolocationSourceOptions;
     private _watchId: number;
 
-    constructor(options?: SensorSourceOptions) {
+    constructor(options?: GeolocationSourceOptions) {
         super(options);
         this.options.interval = this.options.interval || 1000;
         this.options.distanceFilter = this.options.distanceFilter || 1;
         if (this.options.autoStart) {
             this.once('build', this.start.bind(this));
         }
+        this.once('destroy', this.stop.bind(this));
     }
 
     public start(): Promise<void> {
         return new Promise<void>((resolve) => {
+            if (this._watchId !== undefined) {
+                return resolve();
+            }
             this._watchId = Geolocation.watchPosition(
                 (position) => {
                     const geoPos = this._convertPosition(position);
@@ -54,13 +58,17 @@ export class GeolocationSourceNode extends SourceNode<DataFrame> {
         geoPos.altitude = position.coords.altitude;
         geoPos.latitude = position.coords.latitude;
         geoPos.longitude = position.coords.longitude;
-        geoPos.linearVelocity = new LinearVelocity(position.coords.speed);
-        geoPos.orientation = Orientation.fromEuler({
-            yaw: position.coords.heading,
-            pitch: 0,
-            roll: 0,
-            unit: AngleUnit.DEGREE,
-        });
+        if (position.coords.speed >= 0) {
+            geoPos.linearVelocity = new LinearVelocity(position.coords.speed);
+        }
+        if (position.coords.heading >= 0) {
+            geoPos.orientation = Orientation.fromEuler({
+                yaw: position.coords.heading,
+                pitch: 0,
+                roll: 0,
+                unit: AngleUnit.DEGREE,
+            });
+        }
         return geoPos;
     }
 

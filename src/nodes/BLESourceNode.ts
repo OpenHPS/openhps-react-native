@@ -1,5 +1,5 @@
 import { DataFrame, SourceNode, SensorSourceOptions } from '@openhps/core';
-import { BleManager, Device, ScanMode, ScanCallbackType } from 'react-native-ble-plx';
+import { BleManager, Device, ScanMode, ScanCallbackType, Subscription } from 'react-native-ble-plx';
 import { RFTransmitterObject, RelativeRSSI } from '@openhps/rf';
 
 /**
@@ -7,6 +7,7 @@ import { RFTransmitterObject, RelativeRSSI } from '@openhps/rf';
  */
 export class BLESourceNode extends SourceNode<DataFrame> {
     private _manager: BleManager;
+    private _stateChangeSubscription: Subscription;
     protected options: BLESourceNodeOptions;
 
     constructor(options?: BLESourceNodeOptions) {
@@ -19,7 +20,7 @@ export class BLESourceNode extends SourceNode<DataFrame> {
     private _onBleInit(): Promise<void> {
         return new Promise<void>((resolve, reject) => {
             this._manager = new BleManager();
-            this._manager.onStateChange((state) => {
+            this._stateChangeSubscription = this._manager.onStateChange((state) => {
                 if (state === 'PoweredOn') {
                     if (this.options.autoStart) {
                         this.start().then(resolve).catch(reject);
@@ -27,7 +28,7 @@ export class BLESourceNode extends SourceNode<DataFrame> {
                         resolve();
                     }
                 } else {
-                    reject(state);
+                    reject(new Error(state));
                 }
             }, true);
         });
@@ -35,42 +36,55 @@ export class BLESourceNode extends SourceNode<DataFrame> {
 
     public stop(): Promise<void> {
         return new Promise<void>((resolve) => {
-            this._manager.stopDeviceScan();
-            resolve();
+            this._stateChangeSubscription?.remove();
+            this._manager
+                .stopDeviceScan()
+                .catch((error) => {
+                    this.logger('error', 'Unable to stop Bluetooth scan!', error);
+                })
+                .then(() => {
+                    resolve();
+                });
         });
     }
 
     public start(): Promise<void> {
-        return new Promise((resolve) => {
-            this._manager.stopDeviceScan();
-            this._manager.startDeviceScan(
-                this.options.uuids,
-                {
-                    allowDuplicates: true,
-                    scanMode: ScanMode.LowLatency,
-                    callbackType: ScanCallbackType.AllMatches,
-                },
-                (error: any, device: Device) => {
-                    if (error) {
-                        this.logger('error', 'Unable to start Bluetooth scan!', error);
-                        return;
-                    }
+        return new Promise<void>((resolve) => {
+            this._manager
+                .stopDeviceScan()
+                .catch((error) => {
+                    this.logger('error', 'Unable to stop Bluetooth scan!', error);
+                })
+                .then(() => {
+                    this._manager.startDeviceScan(
+                        this.options.uuids,
+                        {
+                            allowDuplicates: true,
+                            scanMode: ScanMode.LowLatency,
+                            callbackType: ScanCallbackType.AllMatches,
+                        },
+                        (error: any, device: Device) => {
+                            if (error) {
+                                this.logger('error', 'Unable to start Bluetooth scan!', error);
+                                return;
+                            }
 
-                    const frame = new DataFrame();
-                    const beacon = new RFTransmitterObject(device.id);
-                    beacon.displayName = device.localName;
-                    beacon.txPower = device.txPowerLevel;
-                    frame.addObject(beacon);
+                            const frame = new DataFrame();
+                            const beacon = new RFTransmitterObject(device.id);
+                            beacon.displayName = device.localName;
+                            beacon.txPower = device.txPowerLevel;
+                            frame.addObject(beacon);
 
-                    frame.source = this.source;
-                    frame.source.relativePositions.forEach((pos) =>
-                        frame.source.removeRelativePositions(pos.referenceObjectUID),
+                            frame.source = this.source;
+                            frame.source.relativePositions.forEach((pos) =>
+                                frame.source.removeRelativePositions(pos.referenceObjectUID),
+                            );
+                            frame.source.addRelativePosition(new RelativeRSSI(beacon, device.rssi));
+                            this.push(frame);
+                        },
                     );
-                    frame.source.addRelativePosition(new RelativeRSSI(beacon, device.rssi));
-                    this.push(frame);
-                },
-            );
-            resolve();
+                    resolve();
+                });
         });
     }
 
