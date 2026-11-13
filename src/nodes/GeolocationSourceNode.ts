@@ -74,7 +74,10 @@ export class GeolocationSourceNode extends SourceNode<DataFrame> {
 
     public stop(): Promise<void> {
         return new Promise<void>((resolve) => {
-            Geolocation.clearWatch(this._watchId);
+            if (this._watchId !== undefined) {
+                Geolocation.clearWatch(this._watchId);
+            }
+            this._watchId = undefined;
             resolve();
         });
     }
